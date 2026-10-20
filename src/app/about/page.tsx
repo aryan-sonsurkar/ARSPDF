@@ -10,10 +10,12 @@ import {
   ShieldCheck,
   Trash2,
 } from "lucide-react";
+import { JsonLd } from "@/components/seo/json-ld";
 import { GitHubIcon } from "@/components/ui/github-icon";
 import { GITHUB_URL } from "@/lib/config";
 import { PROTECT_PDF_LIMITATION } from "@/lib/pdf/protect";
 import { createPageMetadata } from "@/lib/site";
+import { buildBreadcrumbStructuredData } from "@/lib/structured-data";
 import { getAvailableTools } from "@/lib/tools";
 
 export const metadata: Metadata = createPageMetadata({
@@ -21,6 +23,12 @@ export const metadata: Metadata = createPageMetadata({
   description:
     "How ArsPDF processes documents, what stays in your browser, and the real limits of browser-based PDF work.",
   path: "/about",
+  keywords: [
+    "ArsPDF privacy",
+    "browser PDF tools",
+    "local PDF processing",
+    "private PDF editor",
+  ],
 });
 
 const SECTIONS = [
@@ -56,11 +64,17 @@ const SECTIONS = [
   },
 ];
 
+const breadcrumbData = buildBreadcrumbStructuredData([
+  { name: "Home", path: "/" },
+  { name: "About & privacy", path: "/about" },
+]);
+
 export default function AboutPage() {
   const available = getAvailableTools();
 
   return (
     <div className="mx-auto w-full max-w-4xl px-5 py-12 sm:px-8 sm:py-16">
+      {breadcrumbData ? <JsonLd data={breadcrumbData} /> : null}
       <nav aria-label="Breadcrumb" className="mb-8">
         <ol className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <li>

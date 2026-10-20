@@ -42,10 +42,12 @@ export function createPageMetadata({
   title,
   description,
   path,
+  keywords,
 }: {
   title: string;
   description: string;
   path: string;
+  keywords?: string[];
 }): Metadata {
   const canonical = absoluteUrl(path);
   const image = absoluteUrl(OG_IMAGE.path);
@@ -54,6 +56,7 @@ export function createPageMetadata({
   return {
     title,
     description,
+    keywords,
     alternates: canonical ? { canonical } : undefined,
     openGraph: {
       title: socialTitle,

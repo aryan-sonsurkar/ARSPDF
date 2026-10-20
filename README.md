@@ -132,6 +132,15 @@ The app sends baseline security headers (`nosniff`, a strict referrer policy, fr
 
 Dependency audit status: `npm audit --omit=dev` reports zero production vulnerabilities. Remaining npm advisories are limited to development-only Tailwind 3/eslint file-watching dependencies (`braces`), whose only offered fix is a breaking Tailwind 4 upgrade; they are not shipped to the browser.
 
+## SEO and social metadata
+
+- Every page has a title, description, canonical URL, and page-specific keywords.
+- Open Graph and Twitter cards use the committed `public/og.png` image.
+- JSON-LD describes the site (`Organization`, `WebSite`, `WebApplication`) and adds `BreadcrumbList` data to tool and privacy pages.
+- `robots.txt` and `sitemap.xml` are generated from the tool registry, with unavailable tools included as lower-priority pages.
+- Viewport, dark color scheme, theme color, author metadata, and Google site verification are configured in the root layout.
+- Set `NEXT_PUBLIC_SITE_URL` for a custom domain so canonical, Open Graph, and sitemap URLs use it. Vercel's production URL is used automatically otherwise.
+
 ## Privacy architecture
 
 - Document bytes stay in the browser tab. All nine working tools manipulate files locally.
