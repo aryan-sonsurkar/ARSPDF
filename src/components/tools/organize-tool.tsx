@@ -73,6 +73,9 @@ export function OrganizeTool() {
           data: bytes,
           isEvalSupported: false,
           useSystemFonts: true,
+          standardFontDataUrl: "/pdfjs/standard_fonts/",
+          cMapUrl: "/pdfjs/cmaps/",
+          cMapPacked: true,
         });
         const loaded = await loadingTask.promise;
 

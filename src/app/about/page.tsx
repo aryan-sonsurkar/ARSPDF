@@ -13,13 +13,15 @@ import {
 import { GitHubIcon } from "@/components/ui/github-icon";
 import { GITHUB_URL } from "@/lib/config";
 import { PROTECT_PDF_LIMITATION } from "@/lib/pdf/protect";
+import { createPageMetadata } from "@/lib/site";
 import { getAvailableTools } from "@/lib/tools";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "About & privacy",
   description:
     "How ArsPDF processes documents, what stays in your browser, and the real limits of browser-based PDF work.",
-};
+  path: "/about",
+});
 
 const SECTIONS = [
   {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ToolPage } from "@/components/tools/tool-page";
 import { UnavailableTool } from "@/components/tools/unavailable-tool";
+import { createPageMetadata } from "@/lib/site";
 import { getTool, TOOLS } from "@/lib/tools";
 
 export const dynamicParams = false;
@@ -22,10 +23,11 @@ export async function generateMetadata({ params }: ToolRouteProps): Promise<Meta
     return { title: "Tool not found" };
   }
 
-  return {
+  return createPageMetadata({
     title: tool.title,
     description: tool.description,
-  };
+    path: `/tools/${tool.slug}`,
+  });
 }
 
 export default async function ToolRoute({ params }: ToolRouteProps) {

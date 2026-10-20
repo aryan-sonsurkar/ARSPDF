@@ -2,6 +2,14 @@ import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import {
+  absoluteUrl,
+  OG_IMAGE,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+} from "@/lib/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -16,14 +24,17 @@ const display = Space_Grotesk({
   display: "swap",
 });
 
+const canonical = absoluteUrl("/");
+const socialImage = absoluteUrl(OG_IMAGE.path);
+
 export const metadata: Metadata = {
+  metadataBase: SITE_URL ? new URL(SITE_URL) : undefined,
   title: {
-    default: "ArsPDF — Every PDF tool. No paywalls.",
-    template: "%s · ArsPDF",
+    default: SITE_TITLE,
+    template: `%s · ${SITE_NAME}`,
   },
-  description:
-    "A free, browser-based PDF toolkit. Merge, split, organize, rotate, watermark, and convert images to PDF without an account or artificial quotas.",
-  applicationName: "ArsPDF",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
   keywords: [
     "PDF tools",
     "merge PDF",
@@ -33,12 +44,29 @@ export const metadata: Metadata = {
     "image to PDF",
     "free PDF toolkit",
   ],
+  alternates: canonical ? { canonical } : undefined,
   openGraph: {
-    title: "ArsPDF — Every PDF tool. No paywalls.",
-    description:
-      "A free, browser-based PDF toolkit. Your files are processed locally wherever the tool allows.",
-    siteName: "ArsPDF",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: canonical,
+    siteName: SITE_NAME,
     type: "website",
+    images: socialImage
+      ? [
+          {
+            url: socialImage,
+            width: OG_IMAGE.width,
+            height: OG_IMAGE.height,
+            alt: OG_IMAGE.alt,
+          },
+        ]
+      : undefined,
+  },
+  twitter: {
+    card: socialImage ? "summary_large_image" : "summary",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: socialImage ? [socialImage] : undefined,
   },
 };
 

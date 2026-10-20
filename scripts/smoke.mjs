@@ -93,7 +93,25 @@ async function main() {
     assert(toolLinks >= 9, `Expected tool cards, found ${toolLinks}`);
     await page.getByLabel("Search PDF tools").fill("water");
     await page.getByRole("heading", { name: "Watermark PDF" }).waitFor();
-    console.log("home: ok");
+    assert(
+      (await page.title()) === "ArsPDF — Every PDF tool. No paywalls.",
+      `Unexpected home title: ${await page.title()}`,
+    );
+    assert(
+      Boolean(await page.locator('meta[name="description"]').getAttribute("content")),
+      "Home page is missing a meta description",
+    );
+
+    const robots = await page.request.get(`${BASE}/robots.txt`);
+    assert(robots.ok() && (await robots.text()).includes("Allow: /"), "robots.txt is invalid");
+    const sitemap = await page.request.get(`${BASE}/sitemap.xml`);
+    assert(sitemap.ok(), "sitemap.xml did not return 200");
+    const ogImage = await page.request.get(`${BASE}/og.png`);
+    assert(
+      ogImage.ok() && ogImage.headers()["content-type"]?.includes("image/png"),
+      "Open Graph image is missing",
+    );
+    console.log("home + metadata: ok");
 
     // Merge
     await openTool(page, "merge-pdf", "Merge PDF");

@@ -51,7 +51,7 @@ The core processing model is local. PDFs are read and written in the browser wit
 - Tailwind CSS 3 with CSS-variable theme tokens
 - Lucide React icons
 - `pdf-lib` for PDF creation and modification
-- `pdfjs-dist` for page thumbnails (worker copied to `public/` at install/build)
+- `pdfjs-dist` for page thumbnails (worker, standard fonts, and CMaps copied to `public/` at install/build)
 - `jszip` for the optional split-to-ZIP output
 - Vitest for core PDF logic tests
 - Playwright Core + an installed Chrome for the optional end-to-end smoke test
@@ -61,7 +61,7 @@ No database, authentication, payment processor, analytics SDK, server-side PDF p
 
 ## Local development
 
-Requirements: Node.js 20 or newer (developed with Node 24) and npm.
+Requirements: Node.js 20.19 or newer (developed with Node 24) and npm.
 
 ```bash
 npm install
@@ -70,17 +70,20 @@ npm run dev
 
 Open <http://localhost:3000>.
 
-`npm install` runs a `postinstall` script that copies the matching PDF.js worker from `node_modules/pdfjs-dist` to `public/pdf.worker.min.mjs`. The same copy runs before `dev` and `build`. The worker file is generated, not committed.
+`npm install` runs a `postinstall` script that copies the matching PDF.js worker, standard fonts, and CMaps from `node_modules/pdfjs-dist` into `public/`. The same copy runs before `dev` and `build`. These files are generated, not committed.
 
 ### Environment variables
 
-Copy `.env.example` to `.env.local` if you want to override the repository link:
+Copy `.env.example` to `.env.local` if you want to override the repository or canonical site URL:
 
 ```bash
 NEXT_PUBLIC_GITHUB_URL=https://github.com/your-user/your-repo
+NEXT_PUBLIC_SITE_URL=https://your-production-domain.example
 ```
 
-If unset, the link falls back to `https://github.com/aryan-sonsurkar/ARSPDF`.
+`NEXT_PUBLIC_GITHUB_URL` falls back to `https://github.com/aryan-sonsurkar/ARSPDF` when unset.
+
+`NEXT_PUBLIC_SITE_URL` powers canonical links, Open Graph and Twitter metadata, `robots.txt`, and `sitemap.xml`. On Vercel, `VERCEL_PROJECT_PRODUCTION_URL` is used automatically when it is unset. Locally, leave it empty so development metadata never advertises `localhost`.
 
 ## Commands
 
@@ -104,7 +107,7 @@ npm test
 
 The suite covers merge, split/extract, organize (reorder, delete, rotate), rotate, image-to-PDF, page ranges, page numbers, and watermarks, including invalid-input paths.
 
-An optional real-browser smoke test exercises all nine implemented tools, downloads each result, checks page counts, verifies PDF.js thumbnails render, and checks that unavailable tools expose no file input:
+An optional real-browser smoke test exercises all nine implemented tools, downloads each result, checks page counts, verifies PDF.js thumbnails render, validates core metadata/robots/sitemap/Open Graph assets, and checks that unavailable tools expose no file input:
 
 ```bash
 npm run build
@@ -120,10 +123,14 @@ npm run test:smoke
 1. Push the repository to GitHub.
 2. Import it in Vercel as a Next.js project.
 3. Keep the default install command (`npm install`) and build command (`npm run build`).
-4. Optionally add `NEXT_PUBLIC_GITHUB_URL`.
+4. Optionally add `NEXT_PUBLIC_GITHUB_URL` and `NEXT_PUBLIC_SITE_URL`. The latter is recommended for a custom domain; otherwise the production Vercel URL is used automatically.
 5. Deploy.
 
-There is no required server runtime, database, or secret. All document processing happens in the client. The PDF.js worker is emitted as a static asset during install/build. No request-body or function-timeout limits apply to document processing because no document is sent to Vercel.
+There is no required server runtime, database, or secret. All document processing happens in the client. The PDF.js worker, standard fonts, and CMaps are emitted as static assets during install/build. No request-body or function-timeout limits apply to document processing because no document is sent to Vercel.
+
+The app sends baseline security headers (`nosniff`, a strict referrer policy, frame denial, a restricted permissions policy, and a narrow CSP that blocks framing, plugins, and base-tag injection). There is no analytics SDK or third-party request containing document data.
+
+Dependency audit status: `npm audit --omit=dev` reports zero production vulnerabilities. Remaining npm advisories are limited to development-only Tailwind 3/eslint file-watching dependencies (`braces`), whose only offered fix is a breaking Tailwind 4 upgrade; they are not shipped to the browser.
 
 ## Privacy architecture
 
