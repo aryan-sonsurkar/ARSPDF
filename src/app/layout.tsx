@@ -45,6 +45,9 @@ export const metadata: Metadata = {
     "free PDF toolkit",
   ],
   alternates: canonical ? { canonical } : undefined,
+  verification: {
+    google: "tPkn0J9gDX8IFeN6vquQxg8SDzaG5Z4r0Z-Q0j5MHJ8",
+  },
   openGraph: {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
