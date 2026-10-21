@@ -54,12 +54,12 @@ export function FileDropzone({
       }}
       onDrop={handleDrop}
       className={cn(
-        "group relative block rounded-2xl border border-dashed transition-colors",
-        compact ? "p-4" : "p-6 sm:p-10",
+        "group relative block rounded-[1.7rem] border-2 border-dashed transition-all",
+        compact ? "p-5" : "p-6 sm:p-10",
         disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
         dragActive
-          ? "border-primary bg-primary/10"
-          : "border-border bg-background/40 hover:border-primary/40 hover:bg-elevated/40",
+          ? "border-chalk-yellow bg-chalk-yellow/10"
+          : "border-foreground/30 bg-background/30 hover:-translate-y-0.5 hover:border-chalk-blue/70 hover:bg-elevated/40",
       )}
       aria-disabled={disabled}
     >
@@ -81,26 +81,31 @@ export function FileDropzone({
       <div className="flex flex-col items-center text-center">
         <span
           className={cn(
-            "grid place-items-center rounded-2xl border border-primary/25 bg-primary/10 text-primary transition-transform duration-300 group-hover:-translate-y-0.5",
-            compact ? "h-9 w-9" : "h-12 w-12",
+            "grid -rotate-3 place-items-center rounded-[18px_14px_20px_15px] border-2 border-dashed border-chalk-yellow/50 bg-chalk-yellow/10 text-chalk-yellow transition-transform duration-300 group-hover:rotate-3 group-hover:scale-105",
+            compact ? "h-10 w-10" : "h-14 w-14",
           )}
         >
-          <Upload className={compact ? "h-4 w-4" : "h-5 w-5"} aria-hidden="true" />
+          <Upload className={compact ? "h-5 w-5" : "h-6 w-6"} aria-hidden="true" />
         </span>
 
-        <p className={cn("font-medium", compact ? "mt-3 text-sm" : "mt-4 text-base")}>
+        <p className={cn("font-display tracking-wide", compact ? "mt-3 text-base" : "mt-4 text-xl")}>
           {title}
         </p>
-        <p className="mt-1 max-w-md text-xs leading-relaxed text-muted-foreground sm:text-[13px]">
+        <p className="mt-1 max-w-md text-xs font-semibold leading-relaxed text-muted-foreground sm:text-[13px]">
           {hint}
         </p>
 
         <span
           aria-hidden="true"
-          className="mt-4 inline-flex h-11 items-center rounded-lg border border-border bg-elevated px-5 text-sm font-medium text-foreground transition-colors group-hover:border-primary/40 group-hover:bg-primary/10"
+          className="mt-4 inline-flex h-11 items-center rounded-xl border-2 border-chalk-yellow bg-chalk-yellow px-5 font-display text-base tracking-wide text-primary-foreground shadow-[0_4px_0_-1px_hsl(44_98%_42%)] transition-colors group-hover:bg-primary-hover"
         >
           Browse files
         </span>
+        {!compact ? (
+          <span className="mt-2 font-accent text-base text-muted-foreground/80">
+            …or drag &amp; drop onto the board
+          </span>
+        ) : null}
       </div>
     </label>
   );

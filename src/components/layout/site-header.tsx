@@ -10,9 +10,17 @@ import { GITHUB_URL } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
-  { href: "/#tools", label: "Tools" },
-  { href: "/#features", label: "Features" },
-  { href: "/about", label: "About" },
+  { href: "/#tools", label: "Tools", hoverClass: "hover:doodle-underline" },
+  { href: "/#features", label: "Features", hoverClass: "hover:doodle-underline-pink" },
+  { href: "/about", label: "About", hoverClass: "hover:text-chalk-yellow" },
+];
+
+const CHALK_PIECES = [
+  "bg-chalk-yellow",
+  "bg-chalk-pink",
+  "bg-chalk-blue",
+  "bg-chalk-green",
+  "bg-chalk-orange",
 ];
 
 export function SiteHeader() {
@@ -33,7 +41,7 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b-2 border-dashed border-foreground/15 bg-[hsl(152_24%_7%)]/92 backdrop-blur-xl">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
         <Logo />
 
@@ -43,8 +51,9 @@ export function SiteHeader() {
               key={link.href}
               href={link.href}
               className={cn(
-                "rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground",
-                pathname === link.href && "text-foreground",
+                "rounded-md px-3 py-2 font-display text-[15px] tracking-wide text-muted-foreground transition-colors hover:text-foreground",
+                link.hoverClass,
+                pathname === link.href && "text-chalk-yellow",
               )}
             >
               {link.label}
@@ -57,7 +66,7 @@ export function SiteHeader() {
             href={GITHUB_URL}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex h-11 items-center gap-2 rounded-lg border border-border bg-elevated px-3 text-sm font-medium text-muted-foreground transition-colors hover:border-border hover:text-foreground sm:h-9"
+            className="inline-flex h-11 items-center gap-2 rounded-xl border-2 border-dashed border-foreground/25 bg-surface/70 px-3 text-sm font-semibold text-muted-foreground transition-all hover:-translate-y-0.5 hover:border-chalk-blue/70 hover:text-foreground sm:h-9"
           >
             <GitHubIcon className="h-4 w-4" />
             <span className="hidden sm:inline">GitHub</span>
@@ -65,7 +74,7 @@ export function SiteHeader() {
 
           <button
             type="button"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-elevated text-muted-foreground transition-colors hover:text-foreground md:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border-2 border-dashed border-foreground/25 bg-surface/70 text-muted-foreground transition-colors hover:border-chalk-yellow/60 hover:text-foreground md:hidden"
             aria-expanded={open}
             aria-controls="mobile-navigation"
             aria-label={open ? "Close navigation menu" : "Open navigation menu"}
@@ -76,11 +85,28 @@ export function SiteHeader() {
         </div>
       </div>
 
+      {/* Chalk tray */}
+      <div
+        className="pointer-events-none absolute inset-x-0 -bottom-[3px] mx-auto flex h-2 w-full max-w-7xl items-center justify-end gap-1 overflow-hidden px-6 sm:px-9"
+        aria-hidden="true"
+      >
+        {CHALK_PIECES.map((color, index) => (
+          <span
+            key={color}
+            className={cn(
+              "h-1.5 w-7 rounded-full opacity-70",
+              color,
+              index % 2 === 0 ? "rotate-1" : "-rotate-2",
+            )}
+          />
+        ))}
+      </div>
+
       {open ? (
         <nav
           id="mobile-navigation"
           aria-label="Mobile"
-          className="border-t border-border/70 bg-surface px-5 py-3 md:hidden"
+          className="border-t-2 border-dashed border-foreground/15 bg-surface/95 px-5 py-3 backdrop-blur-xl md:hidden"
         >
           <ul className="flex flex-col gap-1">
             {LINKS.map((link) => (
@@ -88,7 +114,7 @@ export function SiteHeader() {
                 <Link
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="block rounded-md px-3 py-3 text-sm text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground"
+                  className="block rounded-xl px-3 py-3 font-display text-base tracking-wide text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground"
                 >
                   {link.label}
                 </Link>

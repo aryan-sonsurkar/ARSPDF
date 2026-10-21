@@ -30,10 +30,10 @@ export function SelectedFiles({
   return (
     <div className="mt-5">
       <div className="mb-2 flex items-center justify-between gap-3">
-        <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+        <h3 className="font-marker text-xs uppercase tracking-[0.18em] text-chalk-pink">
           {label}
         </h3>
-        <span className="text-xs text-muted-foreground">
+        <span className="font-display text-sm tracking-wide text-muted-foreground">
           {files.length} file{files.length === 1 ? "" : "s"} ·{" "}
           {formatBytes(files.reduce((total, file) => total + file.size, 0))}
         </span>
@@ -68,9 +68,9 @@ export function SelectedFiles({
               setDragOverIndex(null);
             }}
             className={cn(
-              "flex items-center gap-3 rounded-xl border border-border bg-elevated/60 px-3 py-2.5 transition-colors",
+              "flex items-center gap-3 rounded-xl border-2 border-dashed border-foreground/20 bg-surface/60 px-3 py-2.5 transition-colors",
               dragIndex === index && "opacity-50",
-              dragOverIndex === index && dragIndex !== index && "border-primary/60 bg-primary/10",
+              dragOverIndex === index && dragIndex !== index && "border-chalk-yellow/70 bg-chalk-yellow/10",
             )}
           >
             {reorderEnabled ? (
@@ -82,15 +82,15 @@ export function SelectedFiles({
                 <GripVertical className="h-4 w-4" />
               </span>
             ) : (
-              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-primary/10 text-[11px] font-semibold text-primary">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border-2 border-dashed border-chalk-yellow/40 bg-chalk-yellow/10 font-marker text-[11px] text-chalk-yellow">
                 {index + 1}
               </span>
             )}
 
-            <FileText className="h-4 w-4 shrink-0 text-primary/80" aria-hidden="true" />
+            <FileText className="h-4 w-4 shrink-0 text-chalk-blue" aria-hidden="true" />
 
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium" title={file.name}>
+              <p className="truncate font-display text-[15px] tracking-wide" title={file.name}>
                 {file.name}
               </p>
               <p className="text-[11px] text-muted-foreground">{formatBytes(file.size)}</p>
@@ -103,7 +103,7 @@ export function SelectedFiles({
                   onClick={() => onMove?.(index, index - 1)}
                   disabled={index === 0}
                   aria-label={`Move ${file.name} up`}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-chalk-yellow/15 hover:text-chalk-yellow disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   <ChevronUp className="h-4 w-4" />
                 </button>
@@ -112,7 +112,7 @@ export function SelectedFiles({
                   onClick={() => onMove?.(index, index + 1)}
                   disabled={index === files.length - 1}
                   aria-label={`Move ${file.name} down`}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-chalk-yellow/15 hover:text-chalk-yellow disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   <ChevronDown className="h-4 w-4" />
                 </button>
@@ -124,7 +124,7 @@ export function SelectedFiles({
               onClick={() => onRemove(index)}
               disabled={disabled}
               aria-label={`Remove ${file.name}`}
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-destructive/15 hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40"
             >
               <X className="h-4 w-4" />
             </button>

@@ -221,7 +221,7 @@ export function OrganizeTool() {
               processor.reset();
               queue.clear();
             }}
-            className="mt-3 text-xs font-medium text-primary hover:text-[hsl(258_90%_78%)]"
+            className="mt-3 text-xs font-medium text-primary hover:text-[hsl(48_100%_74%)]"
           >
             Choose another file
           </button>

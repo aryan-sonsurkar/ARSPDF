@@ -4,19 +4,34 @@
 
 @layer base {
   :root {
-    --background: 224 24% 6%;
-    --foreground: 228 100% 98%;
-    --surface: 223 24% 9%;
-    --elevated: 222 23% 13%;
-    --border: 222 18% 20%;
-    --muted: 222 20% 15%;
-    --muted-foreground: 222 15% 68%;
-    --primary: 258 90% 66%;
-    --primary-hover: 262 83% 58%;
-    --primary-foreground: 0 0% 100%;
-    --success: 142 71% 45%;
-    --destructive: 0 84% 60%;
-    --ring: 258 90% 66%;
+    /* Chalkboard green-black base */
+    --background: 152 24% 7%;
+    --foreground: 84 32% 95%;
+    --surface: 150 18% 10%;
+    --elevated: 150 15% 14%;
+    --border: 150 13% 27%;
+    --muted: 150 12% 16%;
+    --muted-foreground: 110 14% 70%;
+
+    /* Chalk yellow as the primary "chalk" */
+    --primary: 48 100% 62%;
+    --primary-hover: 44 98% 56%;
+    --primary-foreground: 152 40% 8%;
+    --success: 140 66% 55%;
+    --destructive: 348 92% 68%;
+    --ring: 48 100% 62%;
+
+    /* Classroom chalk colors */
+    --chalk-yellow: 48 100% 62%;
+    --chalk-pink: 340 95% 72%;
+    --chalk-blue: 196 92% 66%;
+    --chalk-green: 140 66% 58%;
+    --chalk-orange: 28 96% 63%;
+    --chalk-purple: 272 88% 76%;
+
+    /* Notebook paper (used inside dark cards sparingly) */
+    --paper: 44 52% 92%;
+    --paper-ink: 152 26% 14%;
   }
 
   * {
@@ -30,9 +45,24 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    background-color: hsl(var(--background));
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, hsl(258 90% 66% / 0.08), transparent 70%);
+      radial-gradient(ellipse 90% 60% at 18% -12%, hsl(var(--chalk-green) / 0.1), transparent 62%),
+      radial-gradient(ellipse 70% 55% at 88% 4%, hsl(var(--chalk-blue) / 0.08), transparent 60%),
+      radial-gradient(ellipse 120% 80% at 50% 110%, hsl(var(--chalk-purple) / 0.07), transparent 65%),
+      linear-gradient(180deg, hsl(152 24% 8%), hsl(154 26% 5%));
     background-attachment: fixed;
+  }
+
+  /* Faint chalk-dust grain over the whole board */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   @media (max-width: 639px) {
@@ -41,47 +71,47 @@
     }
   }
 
+  main,
+  header,
+  footer {
+    position: relative;
+    z-index: 1;
+  }
+
   ::selection {
-    background: hsl(var(--primary) / 0.35);
+    background: hsl(var(--chalk-yellow) / 0.35);
     color: hsl(var(--foreground));
   }
 
   :focus-visible {
     outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
+    border-radius: 4px;
   }
 
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
   }
 
   ::-webkit-scrollbar-track {
-    background: hsl(var(--background));
+    background: hsl(152 24% 6%);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
+    background: hsl(150 13% 30%);
     border-radius: 999px;
-    border: 2px solid hsl(var(--background));
+    border: 3px solid hsl(152 24% 6%);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(222 15% 30%);
+    background: hsl(var(--chalk-yellow) / 0.55);
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
-  }
-
-  .grid-backdrop {
-    background-image:
-      linear-gradient(to right, hsl(var(--border) / 0.5) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(var(--border) / 0.5) 1px, transparent 1px);
-    background-size: 44px 44px;
-    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 75%);
   }
 
   .no-scrollbar::-webkit-scrollbar {
@@ -91,6 +121,119 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  /* Chalk grid backdrop */
+  .grid-backdrop {
+    background-image:
+      linear-gradient(to right, hsl(var(--foreground) / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--foreground) / 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 75% 65% at 50% 35%, black 15%, transparent 78%);
+  }
+
+  /* Soft chalk glow on text */
+  .chalk-text {
+    text-shadow:
+      0 0 1px hsl(var(--foreground) / 0.45),
+      0 0 18px hsl(var(--chalk-yellow) / 0.12);
+  }
+
+  .chalk-heading {
+    text-shadow:
+      0 1px 0 hsl(0 0% 0% / 0.35),
+      0 0 22px hsl(var(--chalk-yellow) / 0.18);
+  }
+
+  /* Hand-drawn squiggle underline */
+  .doodle-underline {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8 Q 16 1 30 8 T 60 8 T 90 8 T 118 8' fill='none' stroke='%23ffd23f' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 100% 0.5em;
+    padding-bottom: 0.28em;
+  }
+
+  .doodle-underline-pink {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8 Q 16 1 30 8 T 60 8 T 90 8 T 118 8' fill='none' stroke='%23ff6ea3' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  }
+
+  /* Notebook ruled lines inside a card */
+  .ruled-lines {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 27px,
+      hsl(var(--foreground) / 0.07) 27px,
+      hsl(var(--foreground) / 0.07) 28px
+    );
+  }
+
+  /* Sticky note surface */
+  .sticky-note {
+    background-image: linear-gradient(
+      180deg,
+      hsl(var(--note) / 1),
+      hsl(var(--note) / 0.88)
+    );
+    color: hsl(var(--paper-ink));
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.35) inset,
+      0 14px 26px -14px hsl(0 0% 0% / 0.75),
+      0 3px 8px -4px hsl(0 0% 0% / 0.5);
+  }
+
+  .sticky-note-yellow {
+    --note: 48 100% 68%;
+  }
+  .sticky-note-pink {
+    --note: 340 100% 82%;
+  }
+  .sticky-note-blue {
+    --note: 196 100% 82%;
+  }
+  .sticky-note-green {
+    --note: 140 80% 76%;
+  }
+
+  /* Translucent washi tape strip */
+  .tape {
+    background-image: linear-gradient(
+      180deg,
+      hsl(44 60% 88% / 0.5),
+      hsl(44 45% 80% / 0.32)
+    );
+    box-shadow: 0 1px 0 hsl(0 0% 100% / 0.35) inset;
+    border-left: 1px dashed hsl(0 0% 100% / 0.25);
+    border-right: 1px dashed hsl(0 0% 100% / 0.25);
+  }
+
+  /* Card that looks like a piece of chalkboard slate */
+  .slate {
+    background-image:
+      linear-gradient(180deg, hsl(150 18% 12% / 0.96), hsl(152 22% 9% / 0.98));
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.04) inset,
+      0 24px 50px -30px hsl(0 0% 0% / 0.9);
+  }
+
+  /* Wobbly hand-drawn border via dashed outline + rough shadow */
+  .chalk-box {
+    border-style: dashed;
+    border-width: 2px;
+    border-color: hsl(var(--foreground) / 0.28);
+    border-radius: 18px 22px 16px 24px;
+  }
+}
+
+@layer components {
+  .chalk-dust {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      hsl(var(--foreground) / 0.16) 1px,
+      transparent 0
+    );
+    background-size: 14px 14px;
   }
 }
 

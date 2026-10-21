@@ -5,7 +5,7 @@ import { GITHUB_URL } from "@/lib/config";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-16 border-t border-border/70 bg-surface/40 sm:mt-24">
+    <footer className="mt-16 border-t-2 border-dashed border-foreground/15 bg-[hsl(152_26%_5%)]/70 sm:mt-24">
       <div className="mx-auto w-full max-w-7xl px-5 py-12 sm:px-8">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div className="max-w-sm space-y-4">
@@ -18,7 +18,7 @@ export function SiteFooter() {
               href={GITHUB_URL}
               target="_blank"
               rel="noreferrer noopener"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="inline-flex items-center gap-2 font-display text-sm tracking-wide text-muted-foreground transition-colors hover:text-chalk-blue"
             >
               <GitHubIcon className="h-4 w-4" />
               View the source
@@ -26,7 +26,7 @@ export function SiteFooter() {
           </div>
 
           <div className="space-y-3">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            <h2 className="font-marker text-xs uppercase tracking-[0.18em] text-chalk-yellow">
               Product
             </h2>
             <ul className="space-y-2 text-sm">
@@ -59,7 +59,7 @@ export function SiteFooter() {
           </div>
 
           <div className="space-y-3">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            <h2 className="font-marker text-xs uppercase tracking-[0.18em] text-chalk-pink">
               Popular tools
             </h2>
             <ul className="space-y-2 text-sm">
@@ -87,16 +87,26 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-4 border-t border-border/70 pt-6 text-xs leading-relaxed text-muted-foreground sm:flex-row sm:items-start sm:justify-between">
+        <div className="mt-10 flex flex-col gap-4 border-t-2 border-dashed border-foreground/15 pt-6 text-xs leading-relaxed text-muted-foreground sm:flex-row sm:items-start sm:justify-between">
           <p>
             &copy; {new Date().getFullYear()} ArsPDF. Built by Aryan Sonsurkar.
             Released under the MIT License.
           </p>
           <p className="max-w-xl sm:text-right">
-            Capabilities depend on the tool and the document. Files are processed
-            in your browser for every tool in this build. Browser memory, file
-            complexity, and device performance still apply.
+            That&apos;s the bell. Capabilities depend on the tool and the document.
+            Files are processed in your browser for every tool in this build.
           </p>
+        </div>
+
+        <div className="mt-8 flex items-center justify-center gap-1.5" aria-hidden="true">
+          {["bg-chalk-yellow", "bg-chalk-pink", "bg-chalk-blue", "bg-chalk-green", "bg-chalk-orange"].map(
+            (color, index) => (
+              <span
+                key={color}
+                className={`h-1.5 w-10 rounded-full ${color} opacity-60 ${index % 2 ? "-rotate-2" : "rotate-1"}`}
+              />
+            ),
+          )}
         </div>
       </div>
     </footer>

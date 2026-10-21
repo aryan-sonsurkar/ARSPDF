@@ -29,20 +29,20 @@ export function TaskFeedback({
       <div
         role="status"
         aria-live="polite"
-        className="rounded-xl border border-primary/25 bg-primary/5 p-4"
+        className="rounded-2xl border-2 border-dashed border-chalk-yellow/40 bg-chalk-yellow/[0.06] p-4"
       >
         <div className="flex items-start gap-3">
-          <Loader2 className="mt-0.5 h-5 w-5 shrink-0 animate-spin text-primary" aria-hidden="true" />
+          <Loader2 className="mt-0.5 h-5 w-5 shrink-0 animate-spin text-chalk-yellow" aria-hidden="true" />
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium">{processingLabel}</p>
+            <p className="font-display text-base tracking-wide">{processingLabel}</p>
             <p className="mt-0.5 text-xs text-muted-foreground">
               This runs in your browser. Large or complex files can take a moment.
             </p>
             <div
-              className="mt-3 h-1 overflow-hidden rounded-full bg-border"
+              className="mt-3 h-2 overflow-hidden rounded-full border border-foreground/15 bg-background/60"
               aria-hidden="true"
             >
-              <div className="h-full w-1/3 animate-shimmer rounded-full bg-gradient-to-r from-transparent via-primary to-transparent bg-[length:200%_100%]" />
+              <div className="h-full w-1/3 animate-shimmer rounded-full bg-gradient-to-r from-transparent via-chalk-yellow to-transparent bg-[length:200%_100%]" />
             </div>
           </div>
         </div>
@@ -54,13 +54,13 @@ export function TaskFeedback({
     return (
       <div
         role="alert"
-        className="rounded-xl border border-destructive/30 bg-destructive/[0.07] p-4"
+        className="rounded-2xl border-2 border-dashed border-destructive/50 bg-destructive/10 p-4"
       >
         <div className="flex items-start gap-3">
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" aria-hidden="true" />
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium">That did not work</p>
-            <p className="mt-1 break-words text-sm leading-relaxed text-muted-foreground">
+            <p className="font-display text-base tracking-wide">That did not work</p>
+            <p className="mt-1 break-words text-sm leading-relaxed text-[hsl(348_100%_85%)]">
               {error}
             </p>
             <p className="mt-2 text-xs text-muted-foreground">
@@ -74,12 +74,13 @@ export function TaskFeedback({
 
   if (status === "success" && result) {
     return (
-      <div className="rounded-xl border border-success/30 bg-success/[0.06] p-4">
+      <div className="relative rounded-2xl border-2 border-chalk-green/40 bg-chalk-green/[0.08] p-4">
+        <span className="tape absolute -top-2.5 left-6 h-4 w-16 -rotate-3" aria-hidden="true" />
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
-            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success" aria-hidden="true" />
+            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-chalk-green" aria-hidden="true" />
             <div className="min-w-0">
-              <p className="text-sm font-medium">{successLabel}</p>
+              <p className="font-display text-base tracking-wide">{successLabel}</p>
               <p className="mt-0.5 truncate text-xs text-muted-foreground" title={result.filename}>
                 {result.filename} · {formatBytes(result.bytes.byteLength)}
               </p>

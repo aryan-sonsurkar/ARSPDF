@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Caveat, Nunito, Patrick_Hand, Permanent_Marker } from "next/font/google";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -15,15 +15,29 @@ import {
 import { buildSiteStructuredData } from "@/lib/structured-data";
 import "./globals.css";
 
-const inter = Inter({
+const sans = Nunito({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-sans",
   display: "swap",
 });
 
-const display = Space_Grotesk({
+const display = Patrick_Hand({
   subsets: ["latin"],
+  weight: "400",
   variable: "--font-display",
+  display: "swap",
+});
+
+const accent = Caveat({
+  subsets: ["latin"],
+  variable: "--font-accent",
+  display: "swap",
+});
+
+const marker = Permanent_Marker({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-marker",
   display: "swap",
 });
 
@@ -35,7 +49,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   colorScheme: "dark",
-  themeColor: "#080b14",
+  themeColor: "#0c1710",
 };
 
 export const metadata: Metadata = {
@@ -111,7 +125,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${display.variable}`}>
+    <html
+      lang="en"
+      className={`${sans.variable} ${display.variable} ${accent.variable} ${marker.variable}`}
+    >
       <body className="min-h-dvh overflow-x-clip font-sans">
         {structuredData ? <JsonLd data={structuredData} /> : null}
         <a

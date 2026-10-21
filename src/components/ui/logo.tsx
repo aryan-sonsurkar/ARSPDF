@@ -20,13 +20,15 @@ export function Logo({
       )}
       aria-label="ArsPDF home"
     >
-      <span className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-br from-primary/25 via-elevated to-elevated shadow-glow transition-transform duration-300 group-hover:-translate-y-0.5">
-        <FileText className="h-[18px] w-[18px] text-primary" strokeWidth={2.2} />
-        <span className="absolute inset-x-1 bottom-1 h-px bg-primary/40" />
+      <span className="relative grid h-10 w-10 -rotate-3 place-items-center rounded-[14px_10px_16px_12px] border-2 border-dashed border-chalk-yellow/60 bg-chalk-yellow/10 text-chalk-yellow shadow-glow transition-transform duration-300 group-hover:rotate-3 group-hover:scale-105">
+        <FileText className="h-[19px] w-[19px]" strokeWidth={2.4} />
+        <span className="absolute -right-1.5 -top-1.5 text-[13px] leading-none text-chalk-pink">
+          *
+        </span>
       </span>
       {showWordmark ? (
-        <span className="font-display text-[1.05rem] font-semibold tracking-tight">
-          Ars<span className="text-primary">PDF</span>
+        <span className="font-marker text-[1.15rem] leading-none tracking-tight chalk-heading">
+          Ars<span className="text-chalk-yellow">PDF</span>
         </span>
       ) : null}
     </Link>
