@@ -40,7 +40,7 @@ export function ToolShell({
         <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-primary/25 bg-primary/10 text-primary">
           <ToolIcon name={tool.icon} className="h-5 w-5" />
         </span>
-        <div>
+        <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
               {tool.title}

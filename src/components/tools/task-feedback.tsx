@@ -58,9 +58,11 @@ export function TaskFeedback({
       >
         <div className="flex items-start gap-3">
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" aria-hidden="true" />
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="text-sm font-medium">That did not work</p>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{error}</p>
+            <p className="mt-1 break-words text-sm leading-relaxed text-muted-foreground">
+              {error}
+            </p>
             <p className="mt-2 text-xs text-muted-foreground">
               Adjust your selection and try again. Nothing was uploaded or saved.
             </p>

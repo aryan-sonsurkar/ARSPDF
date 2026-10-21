@@ -242,7 +242,7 @@ export function OrganizeTool() {
               type="button"
               onClick={resetArrangement}
               disabled={processor.isProcessing}
-              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-elevated px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
+              className="inline-flex h-11 items-center gap-1.5 rounded-lg border border-border bg-elevated px-3.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50 sm:h-9"
             >
               <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
               Reset arrangement
@@ -256,7 +256,7 @@ export function OrganizeTool() {
             </p>
           ) : null}
 
-          <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          <ul className="mt-4 grid grid-cols-1 gap-3 min-[400px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
             {items.map((item, index) => (
               <li
                 key={item.id}
@@ -291,9 +291,18 @@ export function OrganizeTool() {
                 )}
               >
                 <div className="mb-1.5 flex h-5 items-center justify-between gap-2 px-0.5">
-                  <span className="text-[11px] font-semibold">Page {index + 1}</span>
+                  <span className="truncate text-[11px] font-semibold">
+                    Page {index + 1}
+                    <span
+                      className="font-normal text-muted-foreground"
+                      title={`Source page ${item.sourceIndex + 1}`}
+                    >
+                      {" "}
+                      · p.{item.sourceIndex + 1}
+                    </span>
+                  </span>
                   {item.rotation !== 0 ? (
-                    <span className="rounded bg-primary/15 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
+                    <span className="shrink-0 rounded bg-primary/15 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
                       {item.rotation}°
                     </span>
                   ) : null}
@@ -317,52 +326,44 @@ export function OrganizeTool() {
                   </div>
                 </div>
 
-                <div className="mt-2 flex items-center justify-between gap-1">
-                  <span
-                    className="whitespace-nowrap pl-0.5 text-[10px] text-muted-foreground"
-                    title={`Source page ${item.sourceIndex + 1}`}
+                <div className="mt-2 flex items-center justify-center gap-0.5">
+                  <button
+                    type="button"
+                    onClick={() => moveItem(index, index - 1)}
+                    disabled={disabled || index === 0}
+                    aria-label={`Move page ${index + 1} earlier`}
+                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:opacity-30 lg:h-8 lg:w-8"
                   >
-                    from p.{item.sourceIndex + 1}
-                  </span>
-                  <div className="flex items-center gap-0.5">
-                    <button
-                      type="button"
-                      onClick={() => moveItem(index, index - 1)}
-                      disabled={disabled || index === 0}
-                      aria-label={`Move page ${index + 1} earlier`}
-                      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:opacity-30"
-                    >
-                      <ArrowLeft className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => rotateItem(index)}
-                      disabled={disabled}
-                      aria-label={`Rotate page ${index + 1} 90 degrees`}
-                      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:opacity-30"
-                    >
-                      <RotateCw className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => deleteItem(index)}
-                      disabled={disabled || items.length <= 1}
-                      aria-label={`Delete page ${index + 1}`}
-                      title={items.length <= 1 ? "Keep at least one page" : `Delete page ${index + 1}`}
-                      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-30"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => moveItem(index, index + 1)}
-                      disabled={disabled || index === items.length - 1}
-                      aria-label={`Move page ${index + 1} later`}
-                      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:opacity-30"
-                    >
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
+                    <ArrowLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => rotateItem(index)}
+                    disabled={disabled}
+                    aria-label={`Rotate page ${index + 1} 90 degrees`}
+                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:opacity-30 lg:h-8 lg:w-8"
+                  >
+                    <RotateCw className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteItem(index)}
+                    disabled={disabled || items.length <= 1}
+                    aria-label={`Delete page ${index + 1}`}
+                    title={items.length <= 1 ? "Keep at least one page" : `Delete page ${index + 1}`}
+                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-30 lg:h-8 lg:w-8"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveItem(index, index + 1)}
+                    disabled={disabled || index === items.length - 1}
+                    aria-label={`Move page ${index + 1} later`}
+                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:opacity-30 lg:h-8 lg:w-8"
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
                 </div>
               </li>
             ))}

@@ -75,7 +75,7 @@ export default function AboutPage() {
     <div className="mx-auto w-full max-w-4xl px-5 py-12 sm:px-8 sm:py-16">
       {breadcrumbData ? <JsonLd data={breadcrumbData} /> : null}
       <nav aria-label="Breadcrumb" className="mb-8">
-        <ol className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <ol className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
           <li>
             <Link href="/" className="transition-colors hover:text-foreground">
               Home

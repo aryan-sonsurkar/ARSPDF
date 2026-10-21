@@ -57,7 +57,7 @@ export function SiteHeader() {
             href={GITHUB_URL}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex h-9 items-center gap-2 rounded-lg border border-border bg-elevated px-3 text-sm font-medium text-muted-foreground transition-colors hover:border-border hover:text-foreground"
+            className="inline-flex h-11 items-center gap-2 rounded-lg border border-border bg-elevated px-3 text-sm font-medium text-muted-foreground transition-colors hover:border-border hover:text-foreground sm:h-9"
           >
             <GitHubIcon className="h-4 w-4" />
             <span className="hidden sm:inline">GitHub</span>
@@ -65,7 +65,7 @@ export function SiteHeader() {
 
           <button
             type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-elevated text-muted-foreground transition-colors hover:text-foreground md:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-elevated text-muted-foreground transition-colors hover:text-foreground md:hidden"
             aria-expanded={open}
             aria-controls="mobile-navigation"
             aria-label={open ? "Close navigation menu" : "Open navigation menu"}
@@ -87,7 +87,8 @@ export function SiteHeader() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="block rounded-md px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground"
+                  onClick={() => setOpen(false)}
+                  className="block rounded-md px-3 py-3 text-sm text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground"
                 >
                   {link.label}
                 </Link>

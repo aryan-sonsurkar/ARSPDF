@@ -89,10 +89,10 @@ export function OptionField({
 }
 
 export const inputClasses =
-  "h-10 w-full rounded-lg border border-border bg-background/60 px-3 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50";
+  "h-11 w-full rounded-lg border border-border bg-background/60 px-3 text-base text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:text-sm";
 
 export const selectClasses =
-  "h-10 w-full appearance-none rounded-lg border border-border bg-background/60 px-3 text-sm text-foreground transition-colors focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50";
+  "h-11 w-full appearance-none rounded-lg border border-border bg-background/60 px-3 text-base text-foreground transition-colors focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:text-sm";
 
 export function ProcessButton({
   onClick,

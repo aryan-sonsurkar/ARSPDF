@@ -31,7 +31,7 @@ const FEATURES = [
 export function Features() {
   return (
     <section id="features" className="scroll-mt-20">
-      <div className="mx-auto w-full max-w-7xl px-5 pt-24 sm:px-8">
+      <div className="mx-auto w-full max-w-7xl px-5 pt-16 sm:px-8 sm:pt-24">
         <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
             Why ArsPDF

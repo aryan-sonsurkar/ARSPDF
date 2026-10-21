@@ -33,11 +33,12 @@ export function PageRangeField({
 
   return (
     <OptionField label={label} htmlFor={id} hint={hint}>
-      <div className="flex gap-2">
+      <div className="flex items-stretch gap-2">
         <input
           id={id}
           type="text"
-          inputMode="numeric"
+          inputMode="text"
+          autoComplete="off"
           value={value}
           disabled={disabled || pageCount === null}
           onChange={(event) => onChange(event.target.value)}
@@ -46,6 +47,7 @@ export function PageRangeField({
           aria-describedby={parsed && !parsed.ok ? errorId : hintId}
           className={cn(
             inputClasses,
+            "min-w-0 flex-1",
             parsed && !parsed.ok && "border-destructive/60 focus:border-destructive focus:ring-destructive/20",
           )}
         />
@@ -56,7 +58,7 @@ export function PageRangeField({
             onClick={() => {
               if (pageCount !== null) onChange(`1-${pageCount}`);
             }}
-            className="h-10 shrink-0 rounded-lg border border-border bg-elevated px-3 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+            className="h-11 shrink-0 rounded-lg border border-border bg-elevated px-4 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:px-3"
           >
             All
           </button>

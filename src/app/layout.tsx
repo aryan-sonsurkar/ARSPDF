@@ -112,7 +112,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${display.variable}`}>
-      <body className="min-h-screen font-sans">
+      <body className="min-h-dvh overflow-x-clip font-sans">
         {structuredData ? <JsonLd data={structuredData} /> : null}
         <a
           href="#main-content"

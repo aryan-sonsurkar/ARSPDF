@@ -70,14 +70,14 @@ export function ToolExplorer({ tools }: { tools: Tool[] }) {
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search tools, e.g. merge, split, watermark"
                 autoComplete="off"
-                className="h-11 w-full rounded-xl border border-border bg-surface pl-10 pr-10 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="h-11 w-full rounded-xl border border-border bg-surface pl-10 pr-11 text-base text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 sm:text-sm"
               />
               {query ? (
                 <button
                   type="button"
                   onClick={() => setQuery("")}
                   aria-label="Clear search"
-                  className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground"
+                  className="absolute right-1 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -158,7 +158,7 @@ function FilterButton({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
+        "inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-xs font-medium transition-colors",
         active
           ? "border-primary/40 bg-primary/15 text-foreground"
           : "border-border bg-surface text-muted-foreground hover:border-border hover:bg-elevated hover:text-foreground",
@@ -227,7 +227,7 @@ function ToolCard({ tool }: { tool: Tool }) {
       <h3 className="mt-4 flex items-center gap-1 text-[0.95rem] font-semibold tracking-tight">
         {tool.title}
         <ArrowUpRight
-          className="h-4 w-4 -translate-x-1 text-primary opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
+          className="h-4 w-4 shrink-0 -translate-x-1 text-primary opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
           aria-hidden="true"
         />
       </h3>

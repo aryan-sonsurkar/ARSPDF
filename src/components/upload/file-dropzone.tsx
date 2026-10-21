@@ -25,7 +25,7 @@ export function FileDropzone({
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
 
-  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+  function handleDrop(event: React.DragEvent<HTMLLabelElement>) {
     event.preventDefault();
     setDragActive(false);
     if (disabled) return;
@@ -34,7 +34,8 @@ export function FileDropzone({
   }
 
   return (
-    <div
+    <label
+      htmlFor={inputId}
       onDragEnter={(event) => {
         event.preventDefault();
         if (!disabled) setDragActive(true);
@@ -53,12 +54,12 @@ export function FileDropzone({
       }}
       onDrop={handleDrop}
       className={cn(
-        "group relative rounded-2xl border border-dashed transition-colors",
-        compact ? "p-4" : "p-7 sm:p-10",
+        "group relative block rounded-2xl border border-dashed transition-colors",
+        compact ? "p-4" : "p-6 sm:p-10",
+        disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
         dragActive
           ? "border-primary bg-primary/10"
           : "border-border bg-background/40 hover:border-primary/40 hover:bg-elevated/40",
-        disabled && "cursor-not-allowed opacity-60",
       )}
       aria-disabled={disabled}
     >
@@ -94,15 +95,13 @@ export function FileDropzone({
           {hint}
         </p>
 
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={() => inputRef.current?.click()}
-          className="mt-4 inline-flex h-9 items-center rounded-lg border border-border bg-elevated px-4 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
+        <span
+          aria-hidden="true"
+          className="mt-4 inline-flex h-11 items-center rounded-lg border border-border bg-elevated px-5 text-sm font-medium text-foreground transition-colors group-hover:border-primary/40 group-hover:bg-primary/10"
         >
           Browse files
-        </button>
+        </span>
       </div>
-    </div>
+    </label>
   );
 }

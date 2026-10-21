@@ -103,7 +103,7 @@ export function SelectedFiles({
                   onClick={() => onMove?.(index, index - 1)}
                   disabled={index === 0}
                   aria-label={`Move ${file.name} up`}
-                  className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   <ChevronUp className="h-4 w-4" />
                 </button>
@@ -112,7 +112,7 @@ export function SelectedFiles({
                   onClick={() => onMove?.(index, index + 1)}
                   disabled={index === files.length - 1}
                   aria-label={`Move ${file.name} down`}
-                  className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   <ChevronDown className="h-4 w-4" />
                 </button>
@@ -124,7 +124,7 @@ export function SelectedFiles({
               onClick={() => onRemove(index)}
               disabled={disabled}
               aria-label={`Remove ${file.name}`}
-              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40"
             >
               <X className="h-4 w-4" />
             </button>
