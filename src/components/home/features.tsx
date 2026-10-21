@@ -6,7 +6,7 @@ const FEATURES = [
     icon: HardDrive,
     title: "Processed in your browser",
     description:
-      "Every working tool in this build manipulates the document locally with PDF libraries. There is no upload endpoint for PDF operations.",
+      "Every tool in this build manipulates the document locally with PDF and office libraries. There is no upload endpoint for document operations.",
   },
   {
     icon: UserX,
@@ -24,7 +24,7 @@ const FEATURES = [
     icon: ShieldCheck,
     title: "Honest about limits",
     description:
-      "Password protection and office conversions are not shipped because the current stack cannot do them reliably. They are labeled, not faked.",
+      "Encryption runs locally, and every office conversion states what it cannot preserve. Limits are labeled before you run a tool, not hidden after.",
   },
 ];
 

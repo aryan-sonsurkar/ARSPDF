@@ -1,6 +1,7 @@
 import { chromium } from "playwright-core";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, StandardFonts, rgb } from "@cantoo/pdf-lib";
 import { encode as encodeJpeg } from "jpeg-js";
+import JSZip from "jszip";
 import { readFile } from "node:fs/promises";
 
 const BASE = process.env.ARSPDF_BASE_URL ?? "http://localhost:3100";
@@ -44,18 +45,94 @@ const PNG = Buffer.from(
   "base64",
 );
 
-async function downloadResult(page, expectedPages) {
-  const downloadPromise = page.waitForEvent("download", { timeout: 30000 });
+async function downloadResult(page) {
+  const downloadPromise = page.waitForEvent("download", { timeout: 60000 });
   await page.getByRole("button", { name: "Download", exact: true }).click();
   const download = await downloadPromise;
   const path = await download.path();
-  const bytes = new Uint8Array(await readFile(path));
-  const document = await PDFDocument.load(bytes);
+  return {
+    bytes: new Uint8Array(await readFile(path)),
+    filename: download.suggestedFilename(),
+  };
+}
+
+async function downloadPdfResult(page, expectedPages) {
+  const result = await downloadResult(page);
+  const document = await PDFDocument.load(result.bytes);
   assert(
     document.getPageCount() === expectedPages,
-    `Expected ${expectedPages} pages, got ${document.getPageCount()} (${download.suggestedFilename()})`,
+    `Expected ${expectedPages} pages, got ${document.getPageCount()} (${result.filename})`,
   );
-  return download.suggestedFilename();
+  return result.filename;
+}
+
+async function makeDocx(text) {
+  const zip = new JSZip();
+  zip.file(
+    "[Content_Types].xml",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>`,
+  );
+  zip.file(
+    "_rels/.rels",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`,
+  );
+  zip.file(
+    "word/document.xml",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:r><w:rPr><w:b/></w:rPr><w:t>Smoke DOCX heading</w:t></w:r></w:p><w:p><w:r><w:t>Second paragraph for conversion.</w:t></w:r></w:p><w:sectPr/></w:body></w:document>`,
+  );
+  return Buffer.from(await zip.generateAsync({ type: "uint8array" }));
+}
+
+async function makeXlsx() {
+  const zip = new JSZip();
+  zip.file(
+    "[Content_Types].xml",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>`,
+  );
+  zip.file(
+    "_rels/.rels",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`,
+  );
+  zip.file(
+    "xl/workbook.xml",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Data" sheetId="1" r:id="rId1"/></sheets></workbook>`,
+  );
+  zip.file(
+    "xl/_rels/workbook.xml.rels",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`,
+  );
+  zip.file(
+    "xl/worksheets/sheet1.xml",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"><c r="A1" t="inlineStr"><is><t>Name</t></is></c><c r="B1" t="inlineStr"><is><t>Amount</t></is></c></row><row r="2"><c r="A2" t="inlineStr"><is><t>Alpha</t></is></c><c r="B2" t="inlineStr"><is><t>12</t></is></c></row></sheetData></worksheet>`,
+  );
+  return Buffer.from(await zip.generateAsync({ type: "uint8array" }));
+}
+
+async function makePptx() {
+  const zip = new JSZip();
+  zip.file(
+    "[Content_Types].xml",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/ppt/slides/slide1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/></Types>`,
+  );
+  zip.file(
+    "_rels/.rels",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="ppt/presentation.xml"/></Relationships>`,
+  );
+  zip.file(
+    "ppt/slides/slide1.xml",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><p:cSld><p:spTree><p:sp><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:t>Smoke Slide Title</a:t></a:r></a:p><a:p><a:r><a:t>First bullet text.</a:t></a:r></a:p></p:txBody></p:sp></p:spTree></p:cSld></p:sld>`,
+  );
+  return Buffer.from(await zip.generateAsync({ type: "uint8array" }));
+}
+
+async function downloadConvertedPdf(page) {
+  const result = await downloadResult(page);
+  const document = await PDFDocument.load(result.bytes);
+  assert(
+    document.getPageCount() >= 1,
+    `Expected at least one page in ${result.filename}`,
+  );
+  return { filename: result.filename, pages: document.getPageCount() };
 }
 
 async function openTool(page, slug, title) {
@@ -84,13 +161,16 @@ async function main() {
   const pdf3 = await makePdf(3);
   const pdf2 = await makePdf(2);
   const jpeg = makeJpeg();
+  const docx = await makeDocx();
+  const xlsx = await makeXlsx();
+  const pptx = await makePptx();
 
   try {
     // Home page + search
     await page.goto(BASE, { waitUntil: "networkidle" });
     await page.getByRole("heading", { name: /Every PDF tool/i }).waitFor();
     const toolLinks = await page.locator('a[href^="/tools/"]').count();
-    assert(toolLinks >= 9, `Expected tool cards, found ${toolLinks}`);
+    assert(toolLinks >= 21, `Expected 21 tool cards, found ${toolLinks}`);
     await page.getByLabel("Search PDF tools").fill("water");
     await page.getByRole("heading", { name: "Watermark PDF" }).waitFor();
     assert(
@@ -122,7 +202,7 @@ async function main() {
     await page.getByText("2 files will be combined in the order above.").waitFor();
     await page.getByRole("button", { name: "Merge PDFs" }).click();
     await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
-    const mergedName = await downloadResult(page, 5);
+    const mergedName = await downloadPdfResult(page, 5);
     console.log("merge: ok", mergedName);
 
     // Split
@@ -132,7 +212,7 @@ async function main() {
     await page.getByLabel("Pages to extract").fill("1,3");
     await page.getByRole("button", { name: "Split PDF" }).click();
     await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
-    const splitName = await downloadResult(page, 2);
+    const splitName = await downloadPdfResult(page, 2);
     console.log("split: ok", splitName);
 
     // Organize (PDF.js thumbnails + worker)
@@ -151,7 +231,7 @@ async function main() {
     await page.getByRole("button", { name: "Delete page 3" }).click();
     await page.getByRole("button", { name: "Apply changes" }).click();
     await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
-    const organizedName = await downloadResult(page, 2);
+    const organizedName = await downloadPdfResult(page, 2);
     console.log("organize: ok", organizedName);
 
     // Rotate
@@ -162,7 +242,7 @@ async function main() {
     await page.getByLabel("Pages to rotate").fill("2");
     await page.getByRole("button", { name: "Rotate PDF" }).click();
     await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
-    const rotatedName = await downloadResult(page, 3);
+    const rotatedName = await downloadPdfResult(page, 3);
     console.log("rotate: ok", rotatedName);
 
     // Image to PDF
@@ -174,7 +254,7 @@ async function main() {
     await page.getByText("2 images → 2 PDF pages.").waitFor();
     await page.getByRole("button", { name: "Create PDF" }).click();
     await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
-    const imagesName = await downloadResult(page, 2);
+    const imagesName = await downloadPdfResult(page, 2);
     console.log("image-to-pdf: ok", imagesName);
 
     // Delete pages
@@ -184,7 +264,7 @@ async function main() {
     await page.getByLabel("Pages to delete").fill("2");
     await page.getByRole("button", { name: "Delete pages" }).click();
     await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
-    const deletedName = await downloadResult(page, 2);
+    const deletedName = await downloadPdfResult(page, 2);
     console.log("delete-pages: ok", deletedName);
 
     // Extract pages
@@ -194,7 +274,7 @@ async function main() {
     await page.getByLabel("Pages to extract").fill("3,1");
     await page.getByRole("button", { name: "Extract pages" }).click();
     await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
-    const extractedName = await downloadResult(page, 2);
+    const extractedName = await downloadPdfResult(page, 2);
     console.log("extract-pages: ok", extractedName);
 
     // Page numbers
@@ -204,7 +284,7 @@ async function main() {
     await page.getByLabel("Starting number").fill("5");
     await page.getByRole("button", { name: "Add page numbers" }).click();
     await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
-    const numberedName = await downloadResult(page, 3);
+    const numberedName = await downloadPdfResult(page, 3);
     console.log("add-page-numbers: ok", numberedName);
 
     // Watermark
@@ -214,17 +294,162 @@ async function main() {
     await page.getByLabel("Watermark text").fill("SMOKE TEST");
     await page.getByRole("button", { name: "Apply watermark" }).click();
     await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
-    const watermarkName = await downloadResult(page, 3);
+    const watermarkName = await downloadPdfResult(page, 3);
     console.log("watermark: ok", watermarkName);
 
-    // Unavailable tool honesty
-    await page.goto(`${BASE}/tools/protect-pdf`, { waitUntil: "networkidle" });
-    await page.getByText("This feature is intentionally not shipped.").waitFor();
+    // Protect
+    await openTool(page, "protect-pdf", "Protect PDF");
+    await uploadPdf(page, pdf2);
+    await page.getByText("2 pages detected").waitFor();
+    await page.locator("#protect-password").fill("smoke-pass");
+    await page.locator("#protect-confirmation").fill("smoke-pass");
+    await page.getByRole("button", { name: "Protect PDF" }).click();
+    await page.getByText("Your protected PDF is ready").waitFor({ timeout: 60000 });
+    const protectedResult = await downloadResult(page);
+    let protectedLocked = false;
+    try {
+      await PDFDocument.load(protectedResult.bytes);
+    } catch {
+      protectedLocked = true;
+    }
+    assert(protectedLocked, "Protected PDF should require a password");
+    const unlocked = await PDFDocument.load(protectedResult.bytes, {
+      password: "smoke-pass",
+    });
+    assert(unlocked.getPageCount() === 2, "Protected PDF lost pages");
+    console.log("protect: ok", protectedResult.filename);
+
+    // Crop
+    await openTool(page, "crop-pdf", "Crop PDF");
+    await uploadPdf(page, pdf2);
+    await page.getByText("2 pages detected").waitFor();
+    await page.getByRole("button", { name: "Crop PDF" }).click();
+    await page.getByText("Your PDF is ready").waitFor({ timeout: 60000 });
+    const croppedResult = await downloadResult(page);
+    const croppedDocument = await PDFDocument.load(croppedResult.bytes);
+    const croppedBox = croppedDocument.getPage(0).getMediaBox();
+    assert(croppedBox.width < 300, `Expected a cropped width, got ${croppedBox.width}`);
+    console.log("crop: ok", croppedResult.filename);
+
+    // Compress (lossless)
+    await openTool(page, "compress-pdf", "Compress PDF");
+    await uploadPdf(page, pdf2);
+    await page.getByText("2 pages detected").waitFor();
+    await page.getByRole("button", { name: "Compress PDF" }).click();
+    await page.getByText("Your PDF is ready").waitFor({ timeout: 60000 });
+    const compressedName = await downloadPdfResult(page, 2);
+    console.log("compress: ok", compressedName);
+
+    // Repair
+    await openTool(page, "repair-pdf", "Repair PDF");
+    await uploadPdf(page, pdf2);
+    await page.getByRole("button", { name: "Repair PDF" }).click();
+    await page.getByText("Your repaired PDF is ready").waitFor({ timeout: 60000 });
+    const repairedName = await downloadPdfResult(page, 2);
+    console.log("repair: ok", repairedName);
+
+    // PDF to JPG
+    await openTool(page, "pdf-to-jpg", "PDF to JPG");
+    await uploadPdf(page, pdf2);
+    await page.getByText("2 pages detected").waitFor();
+    await page.getByRole("button", { name: "Export JPG" }).click();
+    await page.getByText("Your JPG images are ready").waitFor({ timeout: 60000 });
+    const jpgZip = await downloadResult(page);
+    assert(jpgZip.filename.endsWith(".zip"), `Expected a ZIP, got ${jpgZip.filename}`);
+    const jpgArchive = await JSZip.loadAsync(jpgZip.bytes);
     assert(
-      (await page.locator('input[type="file"]').count()) === 0,
-      "Unavailable tool must not show a file input",
+      Object.keys(jpgArchive.files).length === 2,
+      "Expected two JPG entries in the ZIP",
     );
-    console.log("protect-pdf limitation: ok");
+    console.log("pdf-to-jpg: ok", jpgZip.filename);
+
+    // PDF to PNG
+    await openTool(page, "pdf-to-png", "PDF to PNG");
+    await uploadPdf(page, pdf2);
+    await page.getByText("2 pages detected").waitFor();
+    await page.getByRole("button", { name: "Export PNG" }).click();
+    await page.getByText("Your PNG images are ready").waitFor({ timeout: 60000 });
+    const pngZip = await downloadResult(page);
+    const pngArchive = await JSZip.loadAsync(pngZip.bytes);
+    assert(
+      Object.keys(pngArchive.files).length === 2,
+      "Expected two PNG entries in the ZIP",
+    );
+    console.log("pdf-to-png: ok", pngZip.filename);
+
+    // PDF to text
+    await openTool(page, "pdf-to-text", "Extract PDF Text");
+    await uploadPdf(page, pdf3);
+    await page.getByText("3 pages detected").waitFor();
+    await page.getByRole("button", { name: "Extract text" }).click();
+    await page.getByText("Your text file is ready").waitFor({ timeout: 60000 });
+    const textResult = await downloadResult(page);
+    const extractedText = Buffer.from(textResult.bytes).toString("utf8");
+    assert(extractedText.includes("Page 1"), "TXT is missing extracted text");
+    console.log("pdf-to-text: ok", textResult.filename);
+
+    // PDF to Word
+    await openTool(page, "pdf-to-word", "PDF to Word");
+    await uploadPdf(page, pdf2);
+    await page.getByText("2 pages detected").waitFor();
+    await page.getByRole("button", { name: "Create DOCX" }).click();
+    await page.getByText("Your Word document is ready").waitFor({ timeout: 60000 });
+    const wordResult = await downloadResult(page);
+    const wordArchive = await JSZip.loadAsync(wordResult.bytes);
+    const wordXml = await wordArchive.file("word/document.xml")?.async("string");
+    assert(wordXml?.includes("Page 1"), "DOCX is missing extracted text");
+    console.log("pdf-to-word: ok", wordResult.filename);
+
+    // PDF to Excel
+    await openTool(page, "pdf-to-excel", "PDF to Excel");
+    await uploadPdf(page, pdf2);
+    await page.getByText("2 pages detected").waitFor();
+    await page.getByRole("button", { name: "Create XLSX" }).click();
+    await page.getByText("Your spreadsheet is ready").waitFor({ timeout: 60000 });
+    const excelResult = await downloadResult(page);
+    const excelArchive = await JSZip.loadAsync(excelResult.bytes);
+    const excelXml = await excelArchive.file("xl/worksheets/sheet1.xml")?.async("string");
+    assert(excelXml?.includes("Page 1"), "XLSX is missing extracted text");
+    console.log("pdf-to-excel: ok", excelResult.filename);
+
+    // Word to PDF
+    await openTool(page, "word-to-pdf", "Word to PDF");
+    await page.locator('input[type="file"]').setInputFiles({
+      name: "smoke.docx",
+      mimeType:
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      buffer: docx,
+    });
+    await page.getByRole("button", { name: "Convert to PDF" }).click();
+    await page.getByText("Your PDF is ready").waitFor({ timeout: 60000 });
+    const wordPdf = await downloadConvertedPdf(page);
+    console.log("word-to-pdf: ok", wordPdf.filename);
+
+    // Excel to PDF
+    await openTool(page, "excel-to-pdf", "Excel to PDF");
+    await page.locator('input[type="file"]').setInputFiles({
+      name: "smoke.xlsx",
+      mimeType:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      buffer: xlsx,
+    });
+    await page.getByRole("button", { name: "Convert to PDF" }).click();
+    await page.getByText("Your PDF is ready").waitFor({ timeout: 60000 });
+    const excelPdf = await downloadConvertedPdf(page);
+    console.log("excel-to-pdf: ok", excelPdf.filename);
+
+    // PowerPoint to PDF
+    await openTool(page, "powerpoint-to-pdf", "PowerPoint to PDF");
+    await page.locator('input[type="file"]').setInputFiles({
+      name: "smoke.pptx",
+      mimeType:
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      buffer: pptx,
+    });
+    await page.getByRole("button", { name: "Convert to PDF" }).click();
+    await page.getByText("Your PDF is ready").waitFor({ timeout: 60000 });
+    const pptxPdf = await downloadConvertedPdf(page);
+    console.log("powerpoint-to-pdf: ok", pptxPdf.filename);
 
     // Invalid file handling on split
     await openTool(page, "split-pdf", "Split PDF");

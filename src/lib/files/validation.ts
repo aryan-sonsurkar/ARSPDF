@@ -72,6 +72,73 @@ export function validateImageFile(file: File): string | null {
   return null;
 }
 
+type OfficeKind = "word" | "excel" | "powerpoint";
+
+const OFFICE_EXTENSIONS: Record<OfficeKind, string> = {
+  word: "docx",
+  excel: "xlsx",
+  powerpoint: "pptx",
+};
+
+const OFFICE_MIME_TYPES: Record<OfficeKind, Set<string>> = {
+  word: new Set([
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/zip",
+    "application/octet-stream",
+    "",
+  ]),
+  excel: new Set([
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/zip",
+    "application/octet-stream",
+    "",
+  ]),
+  powerpoint: new Set([
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/zip",
+    "application/octet-stream",
+    "",
+  ]),
+};
+
+const OFFICE_LABELS: Record<OfficeKind, string> = {
+  word: "DOCX",
+  excel: "XLSX",
+  powerpoint: "PPTX",
+};
+
+function validateOfficeFile(file: File, kind: OfficeKind): string | null {
+  const sizeError = isWithinSizeLimit(file);
+  if (sizeError) return sizeError;
+
+  const extension = extensionOf(file.name);
+  const mime = file.type.toLowerCase();
+  const expected = OFFICE_EXTENSIONS[kind];
+  const label = OFFICE_LABELS[kind];
+
+  if (extension !== expected) {
+    return `"${file.name}" is not a ${label} file. Save it in the ${label} format and try again.`;
+  }
+
+  if (!OFFICE_MIME_TYPES[kind].has(mime)) {
+    return `"${file.name}" has a .${expected} extension but its file type is "${file.type}". Choose a genuine ${label} file.`;
+  }
+
+  return null;
+}
+
+export function validateDocxFile(file: File): string | null {
+  return validateOfficeFile(file, "word");
+}
+
+export function validateXlsxFile(file: File): string | null {
+  return validateOfficeFile(file, "excel");
+}
+
+export function validatePptxFile(file: File): string | null {
+  return validateOfficeFile(file, "powerpoint");
+}
+
 export function validateFileBatch(
   files: File[],
   validate: (file: File) => string | null,

@@ -1,4 +1,4 @@
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument } from "@cantoo/pdf-lib";
 import type { BinaryInput } from "@/types/pdf";
 
 export function toUint8Array(input: BinaryInput): Uint8Array {

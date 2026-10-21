@@ -1,4 +1,4 @@
-import { PDFDocument, PageSizes } from "pdf-lib";
+import { PDFDocument, PageSizes } from "@cantoo/pdf-lib";
 import type { BinaryInput } from "@/types/pdf";
 import { PdfToolError } from "./errors";
 import { savePdf, toUint8Array } from "./load";

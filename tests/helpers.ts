@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, StandardFonts, rgb } from "@cantoo/pdf-lib";
 import { encode as encodeJpeg } from "jpeg-js";
 
 export async function createPdf(widths: number[] = [200, 300, 400]): Promise<Uint8Array> {

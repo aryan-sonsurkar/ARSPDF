@@ -18,7 +18,10 @@ export function formatNumber(value: number): string {
 }
 
 export function sanitizeBaseName(name: string): string {
-  const withoutExtension = name.replace(/\.pdf$/i, "");
+  const withoutExtension = name.replace(
+    /\.(pdf|docx|xlsx|pptx|txt|zip|jpg|jpeg|png|doc|xls|ppt)$/i,
+    "",
+  );
   const cleaned = withoutExtension
     .replace(/[<>:"/\\|?*\u0000-\u001f]/g, "-")
     .replace(/\s+/g, " ")

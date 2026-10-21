@@ -1,4 +1,4 @@
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument } from "@cantoo/pdf-lib";
 import { normalizePdfError, PdfToolError } from "./errors";
 
 export async function readPdfPageCount(file: File): Promise<number> {

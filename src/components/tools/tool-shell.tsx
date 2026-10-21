@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { AlertTriangle, ChevronRight } from "lucide-react";
 import { ToolIcon } from "@/components/tools/tool-icon";
 import type { Tool } from "@/lib/tools";
 
@@ -54,6 +54,13 @@ export function ToolShell({
           </p>
         </div>
       </header>
+
+      {tool.limitation ? (
+        <div className="mt-6 flex items-start gap-2.5 rounded-xl border border-[hsl(38_92%_50%/0.3)] bg-[hsl(38_92%_50%/0.08)] px-4 py-3 text-xs leading-relaxed text-[hsl(38_92%_75%)]">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+          <p>{tool.limitation}</p>
+        </div>
+      ) : null}
 
       <div className="mt-8 rounded-2xl border border-border bg-surface p-5 shadow-card sm:p-7">
         {children}

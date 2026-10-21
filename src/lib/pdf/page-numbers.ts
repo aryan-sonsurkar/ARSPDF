@@ -1,4 +1,4 @@
-import { StandardFonts, rgb } from "pdf-lib";
+import { StandardFonts, rgb } from "@cantoo/pdf-lib";
 import type { BinaryInput, PdfPagePosition } from "@/types/pdf";
 import { assertPageList, PdfToolError } from "./errors";
 import { loadPdf, savePdf } from "./load";

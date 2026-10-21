@@ -52,6 +52,54 @@ const TOOL_COMPONENTS: Record<string, ComponentType> = {
     () => import("./watermark-tool").then((mod) => mod.WatermarkTool),
     { ssr: false, loading: ToolLoading },
   ),
+  "protect-pdf": dynamic(
+    () => import("./protect-tool").then((mod) => mod.ProtectTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "compress-pdf": dynamic(
+    () => import("./compress-tool").then((mod) => mod.CompressTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "crop-pdf": dynamic(() => import("./crop-tool").then((mod) => mod.CropTool), {
+    ssr: false,
+    loading: ToolLoading,
+  }),
+  "repair-pdf": dynamic(
+    () => import("./repair-tool").then((mod) => mod.RepairTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "pdf-to-jpg": dynamic(
+    () => import("./pdf-image-export-tool").then((mod) => mod.PdfToJpgTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "pdf-to-png": dynamic(
+    () => import("./pdf-image-export-tool").then((mod) => mod.PdfToPngTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "pdf-to-text": dynamic(
+    () => import("./pdf-text-export-tool").then((mod) => mod.PdfToTextTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "pdf-to-word": dynamic(
+    () => import("./pdf-text-export-tool").then((mod) => mod.PdfToWordTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "pdf-to-excel": dynamic(
+    () => import("./pdf-text-export-tool").then((mod) => mod.PdfToExcelTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "word-to-pdf": dynamic(
+    () => import("./office-to-pdf-tool").then((mod) => mod.WordToPdfTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "excel-to-pdf": dynamic(
+    () => import("./office-to-pdf-tool").then((mod) => mod.ExcelToPdfTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "powerpoint-to-pdf": dynamic(
+    () => import("./office-to-pdf-tool").then((mod) => mod.PowerPointToPdfTool),
+    { ssr: false, loading: ToolLoading },
+  ),
 };
 
 export function ToolPage({ slug }: { slug: string }) {

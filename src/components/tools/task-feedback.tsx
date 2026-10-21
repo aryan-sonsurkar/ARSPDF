@@ -13,6 +13,7 @@ export function TaskFeedback({
   result,
   onReset,
   processingLabel = "Processing your document",
+  successLabel = "Your PDF is ready",
   resetLabel = "Start over",
 }: {
   status: ProcessorStatus;
@@ -20,6 +21,7 @@ export function TaskFeedback({
   result: ToolResult | null;
   onReset: () => void;
   processingLabel?: string;
+  successLabel?: string;
   resetLabel?: string;
 }) {
   if (status === "processing") {
@@ -75,7 +77,7 @@ export function TaskFeedback({
           <div className="flex items-start gap-3">
             <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success" aria-hidden="true" />
             <div className="min-w-0">
-              <p className="text-sm font-medium">Your PDF is ready</p>
+              <p className="text-sm font-medium">{successLabel}</p>
               <p className="mt-0.5 truncate text-xs text-muted-foreground" title={result.filename}>
                 {result.filename} · {formatBytes(result.bytes.byteLength)}
               </p>

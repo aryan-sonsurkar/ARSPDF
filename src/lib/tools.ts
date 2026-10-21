@@ -32,6 +32,7 @@ export type Tool = {
   status: ToolStatus;
   icon: ToolIconName;
   note?: string;
+  limitation?: string;
 };
 
 export const CATEGORY_LABELS: Record<ToolCategory, string> = {
@@ -118,110 +119,122 @@ export const TOOLS: Tool[] = [
   {
     slug: "protect-pdf",
     title: "Protect PDF",
-    description: "Password-protect a PDF. Not available: ArsPDF will not fake encryption.",
+    description: "Add AES-256 password protection to a PDF without uploading it.",
     category: "security",
-    status: "unavailable",
+    status: "available",
     icon: "lock",
-    note: "Reliable PDF encryption is not available in the current browser-only stack.",
+    limitation:
+      "Encryption runs in your browser. The password is never sent anywhere, and ArsPDF cannot recover it if you forget it.",
   },
   {
     slug: "compress-pdf",
     title: "Compress PDF",
-    description: "Reduce file size without a misleading, barely-changed result.",
+    description: "Shrink a PDF by re-saving it or re-rendering image-heavy pages.",
     category: "optimize",
-    status: "coming-soon",
+    status: "available",
     icon: "minimize",
-    note: "Reliable compression needs a dedicated optimization pipeline. Not shipped yet.",
+    limitation:
+      "Maximum compression rasterizes every page. Text, links, and form fields stop being selectable after conversion.",
   },
   {
     slug: "pdf-to-jpg",
     title: "PDF to JPG",
-    description: "Render PDF pages to JPG images for download.",
+    description: "Render every selected PDF page to a JPG image inside a ZIP file.",
     category: "convert",
-    status: "coming-soon",
+    status: "available",
     icon: "images",
-    note: "Page rendering and batch image export are planned. Not available in this build.",
+    limitation:
+      "Pages are rasterized. Text becomes part of the image and is no longer selectable.",
   },
   {
     slug: "pdf-to-png",
     title: "PDF to PNG",
-    description: "Render PDF pages to lossless PNG images.",
+    description: "Render selected PDF pages to lossless PNG images.",
     category: "convert",
-    status: "coming-soon",
+    status: "available",
     icon: "image-plus",
-    note: "Page rendering and batch image export are planned. Not available in this build.",
+    limitation:
+      "PNG pages are lossless and can be large. Very high resolutions may exhaust browser memory.",
   },
   {
     slug: "crop-pdf",
     title: "Crop PDF",
-    description: "Trim page margins or crop to a custom area.",
+    description: "Trim equal margins from every page or a selected page range.",
     category: "edit",
-    status: "coming-soon",
+    status: "available",
     icon: "crop",
-    note: "Crop controls need careful content-box handling. Not shipped yet.",
+    limitation:
+      "Crop hides content outside the new page box; it does not delete the underlying page data. Rotated pages use their unrotated edges.",
   },
   {
     slug: "repair-pdf",
     title: "Repair PDF",
-    description: "Attempt to recover a damaged or unreadable PDF.",
+    description: "Rebuild a damaged PDF that other readers can still open.",
     category: "optimize",
-    status: "coming-soon",
+    status: "available",
     icon: "wrench",
-    note: "No dependable browser-based repair engine is included. Not shipped.",
+    limitation:
+      "Repair first tries a lossless rewrite. If that fails, pages are rasterized, so recovered text may no longer be selectable.",
   },
   {
     slug: "word-to-pdf",
     title: "Word to PDF",
-    description: "Convert DOCX documents into PDF.",
+    description: "Convert a DOCX document into a PDF in your browser.",
     category: "convert",
-    status: "coming-soon",
+    status: "available",
     icon: "file-text",
-    note: "High-fidelity DOCX layout requires a full office rendering engine, which is not browser-feasible here.",
+    limitation:
+      "Text, headings, lists, tables, and images are converted. Complex Word layouts, footnotes, and tracked changes may shift.",
   },
   {
     slug: "excel-to-pdf",
     title: "Excel to PDF",
-    description: "Convert spreadsheets into paginated PDFs.",
+    description: "Render XLSX sheets as paginated PDF tables.",
     category: "convert",
-    status: "coming-soon",
+    status: "available",
     icon: "file-spreadsheet",
-    note: "Spreadsheet pagination and formula fidelity need a desktop-grade office engine.",
+    limitation:
+      "Sheets are rendered as tables. Charts, images, macros, comments, and cell styles are not included.",
   },
   {
     slug: "powerpoint-to-pdf",
     title: "PowerPoint to PDF",
-    description: "Convert presentation slides into PDF pages.",
+    description: "Convert PPTX slide text into a printable PDF deck.",
     category: "convert",
-    status: "coming-soon",
+    status: "available",
     icon: "presentation",
-    note: "Slide rendering requires an office rendering engine that is not part of this browser-only build.",
+    limitation:
+      "Text-focused conversion. Animations, media, speaker notes, and the original slide design are not preserved.",
   },
   {
     slug: "pdf-to-word",
     title: "PDF to Word",
-    description: "Convert PDF pages into an editable document.",
+    description: "Extract selectable PDF text into an editable DOCX file.",
     category: "convert",
-    status: "coming-soon",
+    status: "available",
     icon: "file-type",
-    note: "Reliable layout reconstruction needs a dedicated conversion service. ArsPDF will not rename files and call it conversion.",
+    limitation:
+      "Text-focused export. Original fonts, columns, images, and exact page layout are not reconstructed.",
   },
   {
     slug: "pdf-to-excel",
     title: "PDF to Excel",
-    description: "Extract tables from PDFs into a spreadsheet.",
+    description: "Extract PDF text lines into an editable XLSX workbook.",
     category: "convert",
-    status: "coming-soon",
+    status: "available",
     icon: "table",
-    note: "Table detection needs a dedicated parsing engine. Not shipped.",
+    limitation:
+      "Rows and columns are inferred from text positions. Complex or borderless tables may need cleanup in Excel.",
   },
   {
     slug: "pdf-to-text",
     title: "Extract PDF Text",
-    description: "Copy selectable text from PDF pages.",
+    description: "Copy selectable text from PDF pages into a TXT file.",
     category: "convert",
-    status: "coming-soon",
+    status: "available",
     icon: "scan-text",
-    note: "Selectable-text extraction is planned. Scanned pages would require OCR, which is not included.",
+    limitation:
+      "Only selectable text is extracted. Scanned or image-only pages require OCR, which ArsPDF does not include.",
   },
 ];
 

@@ -48,9 +48,9 @@ export function ToolExplorer({ tools }: { tools: Tool[] }) {
               Pick a tool. Get to work.
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-              {tools.filter((tool) => tool.status === "available").length} tools are
-              fully functional. Planned tools are labeled so you always know what
-              will actually produce a file.
+              {tools.filter((tool) => tool.status === "available").length} tools run
+              entirely in your browser. Conversion tools mark their fidelity limits
+              before you run them.
             </p>
           </div>
 
@@ -180,6 +180,7 @@ function FilterButton({
 function ToolCard({ tool }: { tool: Tool }) {
   const badge = STATUS_LABEL[tool.status];
   const isAvailable = tool.status === "available";
+  const isLimited = isAvailable && Boolean(tool.limitation);
 
   return (
     <Link
@@ -211,6 +212,10 @@ function ToolCard({ tool }: { tool: Tool }) {
             )}
           >
             {badge}
+          </span>
+        ) : isLimited ? (
+          <span className="rounded-full border border-[hsl(38_92%_50%/0.3)] bg-[hsl(38_92%_50%/0.1)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[hsl(38_92%_72%)]">
+            Limited
           </span>
         ) : (
           <span className="rounded-full border border-success/20 bg-success/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-success">

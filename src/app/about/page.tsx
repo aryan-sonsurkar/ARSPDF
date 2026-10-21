@@ -13,7 +13,6 @@ import {
 import { JsonLd } from "@/components/seo/json-ld";
 import { GitHubIcon } from "@/components/ui/github-icon";
 import { GITHUB_URL } from "@/lib/config";
-import { PROTECT_PDF_LIMITATION } from "@/lib/pdf/protect";
 import { createPageMetadata } from "@/lib/site";
 import { buildBreadcrumbStructuredData } from "@/lib/structured-data";
 import { getAvailableTools } from "@/lib/tools";
@@ -35,7 +34,7 @@ const SECTIONS = [
   {
     icon: HardDrive,
     title: "Local processing model",
-    body: "Every working tool in this build uses client-side JavaScript. PDF-lib writes and modifies the documents, and PDF.js renders page thumbnails for Organize PDF. There are no API routes that accept document uploads, no external conversion service, no database, and no AI processing.",
+    body: "Every tool in this build uses client-side JavaScript. PDF-lib edits and encrypts documents, PDF.js renders pages and reads text, and office conversions run through local parsers and a canvas renderer. There are no API routes that accept document uploads, no external conversion service, no database, and no AI processing.",
   },
   {
     icon: ShieldCheck,
@@ -55,12 +54,12 @@ const SECTIONS = [
   {
     icon: MonitorSmartphone,
     title: "Fidelity and compatibility",
-    body: "Pdf-lib preserves page content when merging, splitting, rotating, and inserting text, but unusual fonts, embedded scripts, forms, and exotic PDF features may not survive every operation. Password-protected PDFs cannot be opened. Always review the result before relying on it.",
+    body: "Pdf-lib preserves page content when merging, splitting, rotating, and inserting text, but unusual fonts, embedded scripts, forms, and exotic PDF features may not survive every operation. Office conversions are best-effort and text-focused; each conversion tool states its limits before you run it. Always review the result before relying on it.",
   },
   {
     icon: Code2,
-    title: "No fake security or conversions",
-    body: PROTECT_PDF_LIMITATION,
+    title: "Real encryption, labeled conversions",
+    body: "Protect PDF applies AES-256 encryption in your browser using the Web Crypto API, and your password never leaves the tab. When a conversion cannot preserve everything, ArsPDF says so instead of pretending the output is a perfect match.",
   },
 ];
 
@@ -97,10 +96,12 @@ export default function AboutPage() {
           A PDF toolkit that tells you what it actually does.
         </h1>
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-          ArsPDF is a portfolio project built to be useful without accounts,
-          subscriptions, or inflated claims. The design principle is simple:
-          process locally where possible, label what is not ready, and do not
-          pretend a feature exists when it does not.
+          ArsPDF was built by Aryan Sonsurkar, also known as{" "}
+          <span className="font-medium text-foreground">ARS</span>, as a portfolio
+          project that stays useful without accounts, subscriptions, or inflated
+          claims. The design principle is simple: process locally, label fidelity
+          limits clearly, and do not pretend a conversion is lossless when it is
+          not.
         </p>
       </div>
 
@@ -149,9 +150,10 @@ export default function AboutPage() {
         </ul>
 
         <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-          Not listed as available: password protection, compression, office
-          conversions, PDF-to-image, cropping, repair, and PDF-to-text. Their tool
-          pages explain the specific limitation.
+          All {available.length} tools produce a real output file. Office and
+          text-extraction tools are intentionally text-focused: they state their
+          fidelity limits on the tool page and never present a limited conversion
+          as a perfect round trip.
         </p>
       </section>
 
@@ -160,10 +162,10 @@ export default function AboutPage() {
           Open source, with an honest roadmap
         </h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          The project is released under the MIT License. Planned work includes more
-          local tools and better previews, but only where a browser-compatible
-          implementation is reliable. No feature is marked available until it produces
-          a real output file.
+          The project is released under the MIT License and maintained by Aryan
+          Sonsurkar (ARS). Every tool now produces a real output file in the
+          browser; future work focuses on improving conversion fidelity where a
+          browser-compatible implementation can be trusted.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <Link

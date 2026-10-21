@@ -1,4 +1,4 @@
-import { degrees } from "pdf-lib";
+import { degrees } from "@cantoo/pdf-lib";
 import type { BinaryInput } from "@/types/pdf";
 import { assertPageList, PdfToolError } from "./errors";
 import { loadPdf, savePdf } from "./load";
