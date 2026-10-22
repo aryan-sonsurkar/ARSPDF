@@ -111,3 +111,26 @@ export function textPagesToPlainText(pages: PdfTextPage[]): string {
     .join("\n\n")
     .trimEnd()}\n`;
 }
+
+export function textPagesToMarkdown(pages: PdfTextPage[]): string {
+  if (pages.length === 0) return "";
+
+  const sections = pages.map((page) => {
+    const lines = page.lines
+      .map((line) => line.text.trim())
+      .filter((line) => line.length > 0);
+
+    const body = lines
+      .map((line) => {
+        if (/^[\u2022\u00b7]\s+/.test(line)) {
+          return `- ${line.replace(/^[\u2022\u00b7]\s+/, "")}`;
+        }
+        return line;
+      })
+      .join("\n\n");
+
+    return `# Page ${page.pageNumber}\n\n${body || "_(no selectable text on this page)_"}`;
+  });
+
+  return `${sections.join("\n\n")}\n`;
+}

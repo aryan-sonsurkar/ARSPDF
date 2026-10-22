@@ -1,8 +1,12 @@
 import {
+  ArrowDownUp,
+  Contrast,
   Crop,
   Droplets,
+  FileCode2,
   FileMinus,
   FileOutput,
+  FilePlus2,
   FileSpreadsheet,
   FileText,
   FileType,
@@ -10,7 +14,9 @@ import {
   Hash,
   ImagePlus,
   Images,
+  Layers,
   LayoutGrid,
+  List,
   Lock,
   Minimize2,
   Presentation,
@@ -18,6 +24,9 @@ import {
   ScanText,
   Scissors,
   Table2,
+  Tags,
+  Type,
+  Unlock,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
@@ -44,6 +53,15 @@ const ICONS: Record<ToolIconName, LucideIcon> = {
   "file-type": FileType,
   table: Table2,
   "scan-text": ScanText,
+  flip: ArrowDownUp,
+  "file-plus": FilePlus2,
+  unlock: Unlock,
+  layers: Layers,
+  tags: Tags,
+  contrast: Contrast,
+  type: Type,
+  list: List,
+  "file-code": FileCode2,
 };
 
 export function ToolIcon({

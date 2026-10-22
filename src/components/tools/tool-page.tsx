@@ -100,6 +100,42 @@ const TOOL_COMPONENTS: Record<string, ComponentType> = {
     () => import("./office-to-pdf-tool").then((mod) => mod.PowerPointToPdfTool),
     { ssr: false, loading: ToolLoading },
   ),
+  "reverse-pdf": dynamic(() => import("./reverse-tool").then((mod) => mod.ReverseTool), {
+    ssr: false,
+    loading: ToolLoading,
+  }),
+  "add-blank-pages": dynamic(
+    () => import("./blank-pages-tool").then((mod) => mod.BlankPagesTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "unlock-pdf": dynamic(() => import("./unlock-tool").then((mod) => mod.UnlockTool), {
+    ssr: false,
+    loading: ToolLoading,
+  }),
+  "flatten-pdf": dynamic(() => import("./flatten-tool").then((mod) => mod.FlattenTool), {
+    ssr: false,
+    loading: ToolLoading,
+  }),
+  "edit-metadata": dynamic(
+    () => import("./metadata-tool").then((mod) => mod.MetadataTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "grayscale-pdf": dynamic(
+    () => import("./grayscale-tool").then((mod) => mod.GrayscaleTool),
+    { ssr: false, loading: ToolLoading },
+  ),
+  "text-to-pdf": dynamic(() => import("./text-to-pdf-tool").then((mod) => mod.TextToPdfTool), {
+    ssr: false,
+    loading: ToolLoading,
+  }),
+  "csv-to-pdf": dynamic(() => import("./csv-to-pdf-tool").then((mod) => mod.CsvToPdfTool), {
+    ssr: false,
+    loading: ToolLoading,
+  }),
+  "pdf-to-markdown": dynamic(
+    () => import("./pdf-to-markdown-tool").then((mod) => mod.PdfToMarkdownTool),
+    { ssr: false, loading: ToolLoading },
+  ),
 };
 
 export function ToolPage({ slug }: { slug: string }) {

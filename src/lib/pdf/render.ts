@@ -21,6 +21,7 @@ export type RenderPdfPagesOptions = {
   scale?: number;
   quality?: number;
   maxDimension?: number;
+  grayscale?: boolean;
   pages?: number[];
 };
 
@@ -92,6 +93,25 @@ export async function renderPdfPages(
       context.fillRect(0, 0, canvas.width, canvas.height);
 
       await page.render({ canvasContext: context, viewport }).promise;
+
+      if (options.grayscale) {
+        const image = context.getImageData(0, 0, canvas.width, canvas.height);
+        const data = image.data;
+
+        for (let offset = 0; offset < data.length; offset += 4) {
+          const red = data[offset] ?? 0;
+          const green = data[offset + 1] ?? 0;
+          const blue = data[offset + 2] ?? 0;
+          const luminance = Math.round(
+            red * 0.299 + green * 0.587 + blue * 0.114,
+          );
+          data[offset] = luminance;
+          data[offset + 1] = luminance;
+          data[offset + 2] = luminance;
+        }
+
+        context.putImageData(image, 0, 0);
+      }
 
       const bytes = await canvasToBytes(
         canvas,

@@ -2,7 +2,7 @@
 
 **Every PDF tool. No paywalls.**
 
-ArsPDF is a free, browser-first PDF toolkit. It is built as a production-quality portfolio project: 21 document tools that actually work, an honest feature list, and no account, subscription, database, or AI dependency.
+ArsPDF is a free, browser-first PDF toolkit. It is built as a production-quality portfolio project: 30 document tools that actually work, an honest feature list, and no account, subscription, database, or AI dependency.
 
 The core processing model is local. PDFs are read and written in the browser with [@cantoo/pdf-lib](https://github.com/cantoo-scribe/pdf-lib), page previews and text extraction use [PDF.js](https://mozilla.github.io/pdf.js/), and office conversions run through local OOXML parsers with a canvas renderer. There are no API routes that accept document uploads.
 
@@ -31,6 +31,15 @@ The core processing model is local. PDFs are read and written in the browser wit
 | PDF to Word | `/tools/pdf-to-word` | Implemented |
 | PDF to Excel | `/tools/pdf-to-excel` | Implemented |
 | Extract PDF Text | `/tools/pdf-to-text` | Implemented |
+| Reverse PDF | `/tools/reverse-pdf` | Implemented |
+| Add Blank Pages | `/tools/add-blank-pages` | Implemented |
+| Unlock PDF | `/tools/unlock-pdf` | Implemented |
+| Flatten PDF | `/tools/flatten-pdf` | Implemented |
+| Edit PDF Metadata | `/tools/edit-metadata` | Implemented |
+| Grayscale PDF | `/tools/grayscale-pdf` | Implemented |
+| Text to PDF | `/tools/text-to-pdf` | Implemented |
+| CSV to PDF | `/tools/csv-to-pdf` | Implemented |
+| PDF to Markdown | `/tools/pdf-to-markdown` | Implemented |
 
 Every listed tool is implemented and runs in the browser. Conversion tools state their fidelity limits on the tool page before processing.
 
@@ -55,6 +64,15 @@ Every listed tool is implemented and runs in the browser. Conversion tools state
 - **PDF to Word** — selectable-text extraction into a generated DOCX with page breaks.
 - **PDF to Excel** — text-position layout inference into an XLSX workbook, one sheet per PDF page.
 - **Extract PDF Text** — selectable-text extraction into a TXT file with page markers.
+- **Reverse PDF** — copies every page into a new document in reverse order.
+- **Add Blank Pages** — inserts 1–50 blank pages at the start or end, matching the first page, A4, or US Letter.
+- **Unlock PDF** — removes password encryption locally when the current password is known.
+- **Flatten PDF** — flattens AcroForm fields and/or strips page annotations so they become static content.
+- **Edit PDF Metadata** — reads and writes title, author, subject, keywords, creator, and producer, or clears them.
+- **Grayscale PDF** — rasterizes pages to grayscale for print-friendly output.
+- **Text to PDF** — lays out pasted text or a `.txt` file into a paginated, wrapped PDF.
+- **CSV to PDF** — parses quoted CSV and renders a paginated table with an optional header row.
+- **PDF to Markdown** — turns selectable text into a Markdown file with one section per page.
 
 ## Technology stack
 
@@ -117,9 +135,9 @@ Core PDF logic is tested without a browser:
 npm test
 ```
 
-The suite covers merge, split/extract, organize (reorder, delete, rotate), rotate, image-to-PDF, page ranges, page numbers, watermarks, crop, encryption, repair, lossless compression, text layout, DOCX writing, and XLSX writing, including invalid-input paths.
+The suite covers merge, split/extract, organize (reorder, delete, rotate), rotate, image-to-PDF, page ranges, page numbers, watermarks, crop, encryption, repair, lossless compression, text layout, DOCX writing, XLSX writing, page reversal, blank-page insertion, metadata read/write, flattening, CSV parsing, text-to-PDF layout, and Markdown generation, including invalid-input paths.
 
-An optional real-browser smoke test exercises all 21 tools, downloads each result, checks page counts, verifies PDF.js thumbnails, validates core metadata/robots/sitemap/Open Graph assets, and converts generated DOCX, XLSX, and PPTX fixtures:
+An optional real-browser smoke test exercises all 30 tools, downloads each result, checks page counts, verifies PDF.js thumbnails, validates core metadata/robots/sitemap/Open Graph assets, and converts generated DOCX, XLSX, and PPTX fixtures:
 
 ```bash
 npm run build
@@ -155,7 +173,7 @@ Dependency audit status: `npm audit --omit=dev` reports zero production vulnerab
 
 ## Privacy architecture
 
-- Document bytes stay in the browser tab. All 21 tools manipulate files locally.
+- Document bytes stay in the browser tab. All 30 tools manipulate files locally.
 - There are no PDF upload endpoints, no external conversion services, and no analytics calls containing document data.
 - Documents are not written to `localStorage`, cookies, or IndexedDB.
 - PDF.js documents are destroyed when a tool unmounts. Download object URLs are revoked after use.
@@ -167,7 +185,7 @@ See `/about` for the user-facing version of this information.
 ## Known limitations
 
 - **Browser memory is the real limit.** Files are capped at 100 MB each and 250 MB per queue as a safety guard. Complex documents, many high-resolution images, mobile browsers, and low-memory tabs can still fail.
-- **Encrypted PDFs still cannot be opened by editing tools.** Protect PDF creates encrypted files, but PDFs that are already password-protected must be unlocked in a trusted app first. Protect PDF cannot recover a forgotten password.
+- **Encrypted PDFs need the password.** Unlock PDF removes protection only when you know the current password. Other editing tools still refuse encrypted inputs, and no tool can recover a forgotten password.
 - **Office conversions are honest approximations.** DOCX/XLSX/PPTX conversion is text-focused and browser-only. Complex layouts, charts, macros, animations, footnotes, and exact styling are not preserved; each tool says so before you run it.
 - **Rasterized outputs drop selectable text.** Maximum compression, repair fallback, and office-to-PDF conversion produce image-based pages. PDF-to-Word/Excel reconstruct text approximately from position, not layout.
 - **No OCR.** Scanned documents are not converted to searchable text.
@@ -186,7 +204,7 @@ src/
     home/              Hero, searchable tool grid, features
     layout/            Header and footer
     pdf-viewer/        PDF.js page thumbnail
-    tools/             Shared workspace UI + 21 tool implementations
+    tools/             Shared workspace UI + 30 tool implementations
     ui/                Buttons, logo, GitHub icon
     upload/            Dropzone and selected-file list
   hooks/               File queue, page count, task processor

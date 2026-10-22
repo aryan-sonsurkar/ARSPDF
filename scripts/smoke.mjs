@@ -164,13 +164,14 @@ async function main() {
   const docx = await makeDocx();
   const xlsx = await makeXlsx();
   const pptx = await makePptx();
+  const csv = Buffer.from("Name,Amount\nAlpha,12\nBeta,34");
 
   try {
     // Home page + search
     await page.goto(BASE, { waitUntil: "networkidle" });
     await page.getByRole("heading", { name: /Every PDF tool/i }).waitFor();
     const toolLinks = await page.locator('a[href^="/tools/"]').count();
-    assert(toolLinks >= 21, `Expected 21 tool cards, found ${toolLinks}`);
+    assert(toolLinks >= 30, `Expected 30 tool cards, found ${toolLinks}`);
     await page.getByLabel("Search PDF tools").fill("water");
     await page.getByRole("heading", { name: "Watermark PDF" }).waitFor();
     assert(
@@ -450,6 +451,111 @@ async function main() {
     await page.getByText("Your PDF is ready").waitFor({ timeout: 60000 });
     const pptxPdf = await downloadConvertedPdf(page);
     console.log("powerpoint-to-pdf: ok", pptxPdf.filename);
+
+    // Reverse
+    await openTool(page, "reverse-pdf", "Reverse PDF");
+    await uploadPdf(page, pdf3);
+    await page.getByText("3 pages detected").waitFor();
+    await page.getByRole("button", { name: "Reverse PDF" }).click();
+    await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
+    const reversedName = await downloadPdfResult(page, 3);
+    console.log("reverse: ok", reversedName);
+
+    // Add blank pages
+    await openTool(page, "add-blank-pages", "Add Blank Pages");
+    await uploadPdf(page, pdf2);
+    await page.getByText("2 pages detected").waitFor();
+    await page.locator("#blank-count").fill("2");
+    await page.getByRole("button", { name: "Add blank pages" }).click();
+    await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
+    const blankPagesName = await downloadPdfResult(page, 4);
+    console.log("add-blank-pages: ok", blankPagesName);
+
+    // Flatten
+    await openTool(page, "flatten-pdf", "Flatten PDF");
+    await uploadPdf(page, pdf2);
+    await page.getByText("2 pages detected").waitFor();
+    await page.getByRole("button", { name: "Flatten PDF" }).click();
+    await page.getByText("Your flattened PDF is ready").waitFor({ timeout: 30000 });
+    const flattenedName = await downloadPdfResult(page, 2);
+    console.log("flatten-pdf: ok", flattenedName);
+
+    // Edit metadata
+    await openTool(page, "edit-metadata", "Edit PDF Metadata");
+    await uploadPdf(page, pdf2);
+    await page.getByText("2 pages detected").waitFor();
+    await page.waitForTimeout(400);
+    await page.locator("#meta-title").fill("Smoke Metadata Title");
+    await page.getByRole("button", { name: "Save metadata" }).click();
+    await page.getByText("Your updated PDF is ready").waitFor({ timeout: 30000 });
+    const metadataResult = await downloadResult(page);
+    const metadataDocument = await PDFDocument.load(metadataResult.bytes);
+    assert(
+      metadataDocument.getTitle() === "Smoke Metadata Title",
+      `Unexpected metadata title: ${metadataDocument.getTitle()}`,
+    );
+    console.log("edit-metadata: ok", metadataResult.filename);
+
+    // Grayscale
+    await openTool(page, "grayscale-pdf", "Grayscale PDF");
+    await uploadPdf(page, pdf2);
+    await page.getByText("2 pages detected").waitFor();
+    await page.getByRole("button", { name: "Convert to grayscale" }).click();
+    await page.getByText("Your PDF is ready").waitFor({ timeout: 60000 });
+    const grayscaleName = await downloadPdfResult(page, 2);
+    console.log("grayscale-pdf: ok", grayscaleName);
+
+    // Text to PDF
+    await openTool(page, "text-to-pdf", "Text to PDF");
+    await page
+      .locator("#text-source")
+      .fill("Smoke test text for a generated PDF.");
+    await page.getByRole("button", { name: "Create PDF" }).click();
+    await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
+    const textPdfName = await downloadPdfResult(page, 1);
+    console.log("text-to-pdf: ok", textPdfName);
+
+    // CSV to PDF
+    await openTool(page, "csv-to-pdf", "CSV to PDF");
+    await page.locator('input[type="file"]').setInputFiles({
+      name: "smoke.csv",
+      mimeType: "text/csv",
+      buffer: csv,
+    });
+    await page.getByText(/across 2 columns/).waitFor({ timeout: 30000 });
+    await page.getByRole("button", { name: "Create PDF" }).click();
+    await page.getByText("Your PDF is ready").waitFor({ timeout: 30000 });
+    const csvPdfName = await downloadPdfResult(page, 1);
+    console.log("csv-to-pdf: ok", csvPdfName);
+
+    // PDF to Markdown
+    await openTool(page, "pdf-to-markdown", "PDF to Markdown");
+    await uploadPdf(page, pdf3);
+    await page.getByText("3 pages detected").waitFor();
+    await page.getByRole("button", { name: "Create Markdown" }).click();
+    await page.getByText("Your Markdown file is ready").waitFor({ timeout: 30000 });
+    const markdownResult = await downloadResult(page);
+    const markdownText = Buffer.from(markdownResult.bytes).toString("utf8");
+    assert(
+      markdownText.includes("# Page 1"),
+      "Markdown output is missing the page heading",
+    );
+    console.log("pdf-to-markdown: ok", markdownResult.filename);
+
+    // Unlock (reuses the PDF encrypted earlier by Protect)
+    await openTool(page, "unlock-pdf", "Unlock PDF");
+    await page.locator('input[type="file"]').setInputFiles({
+      name: "protected.pdf",
+      mimeType: "application/pdf",
+      buffer: Buffer.from(protectedResult.bytes),
+    });
+    await page.locator("#unlock-password").fill("smoke-pass");
+    await page.getByRole("button", { name: "Unlock PDF" }).click();
+    await page.getByText("Your unlocked PDF is ready").waitFor({ timeout: 30000 });
+    const unlockedResult = await downloadResult(page);
+    const unlockedDocument = await PDFDocument.load(unlockedResult.bytes);
+    assert(unlockedDocument.getPageCount() === 2, "Unlocked PDF lost pages");
+    console.log("unlock: ok", unlockedResult.filename);
 
     // Invalid file handling on split
     await openTool(page, "split-pdf", "Split PDF");

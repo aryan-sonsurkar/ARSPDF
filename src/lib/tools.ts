@@ -22,7 +22,16 @@ export type ToolIconName =
   | "presentation"
   | "file-type"
   | "table"
-  | "scan-text";
+  | "scan-text"
+  | "flip"
+  | "file-plus"
+  | "unlock"
+  | "layers"
+  | "tags"
+  | "contrast"
+  | "type"
+  | "list"
+  | "file-code";
 
 export type Tool = {
   slug: string;
@@ -235,6 +244,95 @@ export const TOOLS: Tool[] = [
     icon: "scan-text",
     limitation:
       "Only selectable text is extracted. Scanned or image-only pages require OCR, which ArsPDF does not include.",
+  },
+  {
+    slug: "reverse-pdf",
+    title: "Reverse PDF",
+    description: "Flip the page order so the last page becomes the first.",
+    category: "organize",
+    status: "available",
+    icon: "flip",
+  },
+  {
+    slug: "add-blank-pages",
+    title: "Add Blank Pages",
+    description: "Insert one or more blank pages at the start or end of a PDF.",
+    category: "organize",
+    status: "available",
+    icon: "file-plus",
+    limitation:
+      "Blank pages are inserted as empty pages. They do not add headers, footers, or page numbers.",
+  },
+  {
+    slug: "unlock-pdf",
+    title: "Unlock PDF",
+    description: "Remove password protection from a PDF you can already open.",
+    category: "security",
+    status: "available",
+    icon: "unlock",
+    limitation:
+      "You must know the current password. The unlocked file is rebuilt from its pages, so interactive forms, annotations, and bookmarks may not carry over.",
+  },
+  {
+    slug: "flatten-pdf",
+    title: "Flatten PDF",
+    description:
+      "Merge form fields and annotations into the page so they stop being editable.",
+    category: "edit",
+    status: "available",
+    icon: "layers",
+    limitation:
+      "Flattening turns interactive fields and comments into static page content. It cannot be undone in the output.",
+  },
+  {
+    slug: "edit-metadata",
+    title: "Edit PDF Metadata",
+    description: "Change the title, author, subject, keywords, and creator stored in a PDF.",
+    category: "edit",
+    status: "available",
+    icon: "tags",
+    limitation:
+      "Metadata is informational. Editing it does not encrypt, sign, or otherwise secure the document.",
+  },
+  {
+    slug: "grayscale-pdf",
+    title: "Grayscale PDF",
+    description: "Convert every page to black and white for smaller, print-friendly output.",
+    category: "optimize",
+    status: "available",
+    icon: "contrast",
+    limitation:
+      "Pages are rasterized, so text and links stop being selectable after conversion.",
+  },
+  {
+    slug: "text-to-pdf",
+    title: "Text to PDF",
+    description: "Turn plain text or a .txt file into a paginated PDF.",
+    category: "convert",
+    status: "available",
+    icon: "type",
+    limitation:
+      "Text is laid out in a single column with a standard font. Complex formatting, images, and non-Latin scripts are not preserved.",
+  },
+  {
+    slug: "csv-to-pdf",
+    title: "CSV to PDF",
+    description: "Render CSV rows as a clean, paginated PDF table.",
+    category: "convert",
+    status: "available",
+    icon: "list",
+    limitation:
+      "Wide tables are scaled to fit the page. Formulas, cell styles, and multiple sheets are ignored.",
+  },
+  {
+    slug: "pdf-to-markdown",
+    title: "PDF to Markdown",
+    description: "Convert selectable PDF text into a Markdown document.",
+    category: "convert",
+    status: "available",
+    icon: "file-code",
+    limitation:
+      "Only selectable text is extracted. Headings, bold, tables, and images are not reconstructed exactly.",
   },
 ];
 

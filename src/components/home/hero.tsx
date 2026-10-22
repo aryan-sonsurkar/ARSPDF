@@ -11,6 +11,7 @@ import {
 import { ButtonLink } from "@/components/ui/button";
 import { GitHubIcon } from "@/components/ui/github-icon";
 import { GITHUB_URL } from "@/lib/config";
+import { getAvailableTools } from "@/lib/tools";
 
 const PREVIEW_TOOLS = [
   { label: "Merge PDF", icon: Files, color: "text-chalk-yellow" },
@@ -24,7 +25,7 @@ const TICKER = [
   "NO PAYWALLS",
   "RUNS IN YOUR BROWSER",
   "NO ACCOUNT NEEDED",
-  "21 TOOLS",
+  `${getAvailableTools().length} TOOLS`,
   "ZERO UPLOADS",
 ];
 
