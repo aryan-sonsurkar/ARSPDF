@@ -41,3 +41,6 @@ next-env.d.ts
 
 # local smoke-test server log
 /smoke-server.log
+
+# local launch drafts (not for publication in the repo)
+/docs/linkedin-launch.md
