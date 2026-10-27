@@ -1,6 +1,43 @@
+<div align="center">
+
+<img src="public/og.png" alt="ArsPDF — 30 PDF tools, no paywalls" width="640"/>
+
 # ArsPDF
 
-**Every PDF tool. No paywalls.**
+**Every PDF tool. No paywalls. Zero uploads.**
+
+[![Live](https://img.shields.io/badge/🌐_Live-arspdf.vercel.app-22c55e?style=for-the-badge)](https://arspdf.vercel.app)
+[![Tools](https://img.shields.io/badge/30_tools-all_working-3178c6?style=for-the-badge)](#feature-status)
+[![Privacy](https://img.shields.io/badge/files-never_leave_your_browser-f59e0b?style=for-the-badge)](#privacy-architecture)
+[![Tests](https://img.shields.io/badge/Vitest_+_smoke-30/30_tools-8b5cf6?style=for-the-badge)](#testing)
+[![License](https://img.shields.io/badge/license-MIT-000000?style=for-the-badge)](./LICENSE)
+
+</div>
+
+## Why I built this
+
+Every "free" PDF tool I ever used wanted one of three things: my file uploaded to
+someone's server, my email address, or my credit card after three merges.
+
+So I built the opposite. **ArsPDF is 30 document tools that run entirely inside the
+browser tab.** There are no API routes that accept uploads — not because uploads are
+hidden, but because they don't exist. Your file's bytes never leave your machine,
+and there is no database, no account, and no AI dependency to leak them to.
+
+This is built in public as part of my [3D portfolio district](https://arssystem.vercel.app) —
+ArsPDF has its own building there. 🏙️
+
+**Live: [arspdf.vercel.app](https://arspdf.vercel.app)**
+
+## What "built in public" means here
+
+- ✅ **30/30 tools implemented** — every row in the table below is shipped code, not a mockup
+- ✅ **Vitest suite** covering merge, split, rotate, encryption, repair, DOCX/XLSX writers, and invalid-input paths
+- ✅ **Real-browser smoke test** that exercises all 30 tools end-to-end, downloads every result, and checks page counts
+- ✅ **Honest limitations section** — including the ones that cost me rewrites (office fidelity, OCR, browser memory)
+- 🔄 Shipped in public across my [100 days of building](https://github.com/aryan-sonsurkar)
+
+---
 
 ArsPDF is a free, browser-first PDF toolkit. It is built as a production-quality portfolio project: 30 document tools that actually work, an honest feature list, and no account, subscription, database, or AI dependency.
 
